@@ -2,30 +2,27 @@
 
 #include <iostream>
 
-FloorNum Elevator::getCurrentFloor() {
-	return mCurrFloor;
-}
-
-void Elevator::changeState(ElevState newState) {
-	mState = newState;
-}
-
 void Elevator::start() {
 	while (!gStop) {
 		mState = ES_WAIT;
-		if (mNextFloor == mCurrFloor and ) { 
-			
+		if (mNextFloor == mCurrFloor and mStop) { 
+			/// We want to start the Door FSM
 		}
 		
 		if (mNextFloor > mCurrFloor) {
 			mState = ES_UP;
 			
+			mCurrFloor++;
+			
 			std::this_thread::sleep_for(5s);
 			continue;
 		} else if (mNextFloor < mCurrFloor) {
 			mState = ES_DOWN;
-			std::this_thread::sleep_for(5s);
 			
+			mCurrFloor--;
+			
+			std::this_thread::sleep_for(5s);
+			continue;
 		} else {
 			continue;
 		}

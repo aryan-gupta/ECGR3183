@@ -1,36 +1,31 @@
 
-
-void Door::latchAndSound() {
-	std::this_thread::sleep_for(2s);
+void Door::start() {
+	// We are currently in DOOR_CLOSED state, we will change state and
+	// Latch and send sound output
+	mState = DOOR_LAT_SND;
+	std::this_thread::sleep_for(2s); // wait for 2s to latch
 	Sound = true;
-	// How long is sound going to be on for?
-}
-
-void Door::waitIR() {
+	
+	// Door is latched now we wait for the controller to tell us to
+	// open the gate
+	while (!mConDoorOpen) { std::this_thread::yield(); }
+	
+	// Open Door (Turn off sound too)
+	Sound = false;
+	mState = DOOR_OPEN;
+	std::this_thread::sleep_for(1s); // Door is opening
+	
+	// Door is open, now let people in and out
+	mState = DOOR_IR;
 	mIRSen.start(); // This is a blocking function
 	// this function will start the IRSensor and wait
 	// for its finish to close the door
 	
-	// What do we do here after?
-}
-
-
-void Door::start() {
-	mState = DOOR_CLOSED;
-	
-	mState = DOOR_LAT_SND;
-	latchAndSound();
-	
-	mState = DOOR_OPEN;
-	while (!mConDoorOpen) { std::this_thread::yield(); }
-	// Open Door
-	
-	mState = DOOR_IR;
-	waitIR();
-	
-	mState = DOOR_CLOSE;
+	// Wait for the controller to send close door signal
 	while (!mConDoorClose) { std::this_thread::yield(); }
-	// close door
+	mState = DOOR_CLOSING;
+	std::this_thread::sleep_for(1s); // Door is closing
 	
-	
+	mState = DOOR_CLOSED; // Door is closed 
+
 }

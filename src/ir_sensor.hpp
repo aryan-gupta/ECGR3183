@@ -8,12 +8,8 @@ enum class IRState {
 	
 };
 
-class IR_Sensor {
+struct IR_Sensor {
 	IRState mState;
-	void signalDoorClose();
 	
-public:
-	void start();
-	void receiveFireOn();
-	
+	void start();	
 };

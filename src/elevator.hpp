@@ -62,21 +62,15 @@ enum class ElevState {
 	ES_DC = 0b11; // wont be used (dont care)
 };
 
-class Elevator {
+struct Elevator {
 	FloorNum mCurrFloor;
 	FloorNum mNextFloor;
 	ElevState mState;
 	Door mDoor;
-	std::atomic_bool 
+	std::atomic_bool mStop;
 	
-	clk::time_point; // this keeps track of when our last state changed
+	// clk::time_point; // this keeps track of when our last state changed
 	
-	void startDoorFSM();
-	
-public:
-	FloorNum getFloor();
-	ElevState getState();
-	void changeState(ElevState newstate);
 	void start();
 	
 };
