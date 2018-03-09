@@ -15,6 +15,5 @@ class IR_Sensor {
 public:
 	void start();
 	void receiveFireOn();
-	void IRon();
 	
 };

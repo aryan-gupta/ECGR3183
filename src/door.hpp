@@ -14,14 +14,18 @@ enum class DoorState {
 
 class Door {
 	DoorState mState;
+	IR_Sensor mIRSen;
+	
+	std::atomic_bool mConDoorOpen;
+	std::atomic_bool mConDoorClose;
+	
 	void latchAndSound(); // This will wait for latching then will output the sound signal after 1s
-	void startIR();
+	void waitIR();
 	void signalDoorClosed();
 	
 public:
-	void startFSM();
+	void start();
 	void receiveControllerDoorOpen();
-	void receiveIRend();
-	void closeDoor();
+	void receiveControllerDoorClose();
 	
 };

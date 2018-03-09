@@ -10,6 +10,51 @@ enum class FloorNum {
 	F3;
 };
 
+class invalid_floor_reached : public std::exception {
+public:
+	std::string what() {
+		return "Umm, ya you killed people. Invalid floor reached";
+	}
+}
+
+/// I know I know What am I doing here, Do I even know C++.
+/// Ill fix it later
+inline void operator++ (FloorNum& a) {
+	switch (a) {
+		case FG: a = F1; return;
+		case F1: a = F2; return;
+		case F2: a = F3; return;
+		default:         throw invalid_floor_reached();
+	}
+}
+
+inline void operator++ (FloorNum& a, int) {
+	switch (a) {
+		case FG: a = F1; return;
+		case F1: a = F2; return;
+		case F2: a = F3; return;
+		default:         throw invalid_floor_reached();
+	}
+}
+
+inline void operator-- (FloorNum& a) {
+	switch (a) {
+		case F1: a = FG; return;
+		case F2: a = F1; return;
+		case F3: a = F2; return;
+		default:         throw invalid_floor_reached();
+	}
+}
+
+inline void operator-- (FloorNum& a, int) {
+	switch (a) {
+		case F1: a = FG; return;
+		case F2: a = F1; return;
+		case F3: a = F2; return;
+		default:         throw invalid_floor_reached();
+	}
+}
+
 enum class ElevState {
 	ES_WAIT = 0b00;
 	ES_DOWN = 0b01;
@@ -18,8 +63,11 @@ enum class ElevState {
 };
 
 class Elevator {
-	FloorNum mFloor;
+	FloorNum mCurrFloor;
+	FloorNum mNextFloor;
 	ElevState mState;
+	Door mDoor;
+	std::atomic_bool 
 	
 	clk::time_point; // this keeps track of when our last state changed
 	
@@ -29,5 +77,6 @@ public:
 	FloorNum getFloor();
 	ElevState getState();
 	void changeState(ElevState newstate);
+	void start();
 	
 };

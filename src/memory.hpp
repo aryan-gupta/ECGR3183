@@ -4,7 +4,7 @@
 ///// NOT THREAD SAFE /////
 
 class Memory {
-	std::vector<FloorNum> mFloors
+	std::queue<FloorNum> mFloors
 	
 public:
 	FloorNum getFloor(FloorNum current, ElevState dir);

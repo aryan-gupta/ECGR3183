@@ -31,3 +31,8 @@ void IR_Sensor::start() {
 	signalDoorClose(); // Signal and close door
 	mState = IR_OFF;
 }
+
+
+void IR_Sensor::signalDoorClose() {
+	
+}

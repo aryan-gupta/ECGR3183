@@ -5,9 +5,10 @@ void Memory::clearMem() {
 }
 
 void Memory::setFloor(FloorNum flr) {
-	mFloors.push_back(flr);
+	mFloors.push(flr);
 }
 
 FloorNum getFloor(FloorNum current, ElevState dir) {
-	std::min_element(flr.begin(). flr.end(), [](FloorNum a, FloorNum b){ return a > b && b >  })
+	return mFloors.top();
+	mFloors.pop();
 }
