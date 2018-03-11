@@ -1,14 +1,17 @@
+#pragma once
 
-#include <iostream>
+#include <atomic>
+#include <cstddef>
+#include <thread>
 
 class FloorLights {
 	std::thread mThread;
 	std::atomic_uchar X20;
 	
-	void operator() ();
-	
 public:
 	FloorLights();
-	std::byte getLights();
+	unsigned char getLights();
+	
+	void start();
 	
 };

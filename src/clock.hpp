@@ -1,7 +1,11 @@
+#pragma once
 
+#include <chrono>
+
+#include "main.hpp"
 
 class Clock {
-	clk::time_point mStart; // this stores when the simulation
+	typename clk::time_point mStart; // this stores when the simulation
 	// started, it is absolute
 	
 	unsigned mHour; // this stores the start time, it wont change
@@ -19,4 +23,4 @@ public:
 	
 	unsigned getHour();
 	unsigned getMin();
-}
+};

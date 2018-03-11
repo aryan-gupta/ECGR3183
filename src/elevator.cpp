@@ -1,6 +1,5 @@
 
-
-#include <iostream>
+#include "main.hpp"
 
 void Elevator::start() {
 	while (!gStop) {

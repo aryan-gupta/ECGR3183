@@ -1,20 +1,21 @@
 
-#include <>
+#include <thread>
+#include "main.hpp"
 
 FloorLights::FloorLights()
 : X20{ 0 } {
-	mThread = std::thread{*this}; // invokes the callable
+	mThread = std::thread{&start, this}; // invokes the callable
 }
 
-void FloorLights::operator() () {
+void FloorLights::start() {
 	while (!gStop) { // So while the global variable hasnt told us to stop
-		std::byte newValue = 0;
+		unsigned char newValue = 0;
 		
 		/// get the state from the elevator
-		auto eleState = //Elevator::getState();
+		auto eleState = gLift.mState;
 		
 		/// get current floor from the elevator
-		auto eleFloor = //Elevator::getFloor();
+		auto eleFloor = gLift.mFloor;
 		
 		switch (eleState) {
 			case ES_WAIT: continue; // if we are waiting then dont shine any lights
@@ -30,10 +31,10 @@ void FloorLights::operator() () {
 			}
 		}
 		
-		X20.load(newValue);
+		X20 = newValue;
 	}
 }
 
-std::byte FloorLights::getLights() {
+unsigned char FloorLights::getLights() {
 	return X20;
 }

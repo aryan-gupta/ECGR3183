@@ -1,4 +1,5 @@
 
+#include "main.hpp"
 
 void Controller::start() {
 	while (true) {
@@ -7,13 +8,13 @@ void Controller::start() {
 		bool memEmpty = gMem.isEmpty();
 		
 		// go in that direction
-		if (floor > gLift.mCurrFloor)
+		if (floor > gLift.mFloor)
 			gLift.mState = ES_UP;
-		if (floor < gLift.mCurrFloor)
+		if (floor < gLift.mFloor)
 			gLift.mState = ES_DOWN;
 		
 		// Wait for the elevator to get to the floor
-		while (gLift.mCurrFloor != floor)
+		while (gLift.mFloor != floor)
 			;
 		// set the state to wait
 		gLift.mState = ES_WAIT;
@@ -35,6 +36,17 @@ void Controller::start() {
 		// press a button for 30 secs, we will assume there is no
 		// person in the elevator and we will reset to the default
 		// floor
-		if (memEmpty)
+		if (memEmpty) {
+			auto end = clk::now() + 30s;
+			while (clk::now() < end) {
+				if (!gMem.isEmpty()) // user pushed a floor button
+					break;
+			}
+		}
+		// the loop will continue for 30 seconds, if the user pushes abort
+		// button in that time then we break and go to that floor
+		// if the loops iterates for 30 seconds the next ask from memory
+		// will get the default floor, if the loop never iterates then	
+		// the queue is not empty so we want to go to the next floor
 	}
 }

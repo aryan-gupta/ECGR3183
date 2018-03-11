@@ -1,7 +1,10 @@
 
+#include "main.hpp"
 
 void Memory::clearMem() {
-	mFloors.clear();
+	// https://stackoverflow.com/questions/709146
+	decltype(mFloors) empty;
+	std::swap(mFloors, empty);
 }
 
 bool Memory::isEmpty() {
@@ -16,7 +19,16 @@ FloorNum Memory::getFloor(FloorNum current, ElevState dir) {
 	if (mFloors.size() == 0)
 		return getDefaultFloor();
 	
-	auto flr = mFloors.top();
+	auto flr = mFloors.front();
+	mFloors.pop();
+	return flr;
+}
+
+FloorNum Memory::getFloor() {
+	if (mFloors.size() == 0)
+		return getDefaultFloor();
+	
+	auto flr = mFloors.front();
 	mFloors.pop();
 	return flr;
 }

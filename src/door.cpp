@@ -1,4 +1,6 @@
 
+#include "main.hpp"
+
 void Door::start() {
 	// We are currently in DOOR_CLOSED state, we will change state and
 	// Latch and send sound output

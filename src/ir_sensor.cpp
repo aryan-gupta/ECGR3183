@@ -1,5 +1,6 @@
 
-
+#include "ir_sensor.hpp"
+#include "main.hpp"
 
 void IR_Sensor::start() {
 	/// Start the IR Sensor loop
@@ -11,8 +12,8 @@ void IR_Sensor::start() {
 		/// gives us a 'no one is here signal'
 		
 		bool startOver = false;
-		auto end = clk::steady_clock::now() + 2s;
-		while (clk::steady_clock::now() > end) {
+		auto end = clk::now() + 2s;
+		while (clk::now() > end) {
 			if (IRon) {
 				startOver = true;
 				break;

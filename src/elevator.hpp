@@ -1,13 +1,15 @@
+#pragma once
 
 #include <iostream>
 #include <chrono>
-using namespace clk = std::chrono; // I am not typeing all that over and over
 
-enum class FloorNum {
-	FG = 0; 
-	F1; 
-	F2;
-	F3;
+#include "door.hpp"
+
+enum FloorNum {
+	FG = 0,
+	F1,
+	F2,
+	F3
 };
 
 class invalid_floor_reached : public std::exception {
@@ -15,7 +17,7 @@ public:
 	std::string what() {
 		return "Umm, ya you killed people. Invalid floor reached";
 	}
-}
+};
 
 /// I know I know What am I doing here, Do I even know C++.
 /// Ill fix it later
@@ -55,11 +57,11 @@ inline void operator-- (FloorNum& a, int) {
 	}
 }
 
-enum class ElevState {
-	ES_WAIT = 0b00;
-	ES_DOWN = 0b01;
-	ES_UP = 0b10;
-	ES_DC = 0b11; // wont be used (dont care)
+enum ElevState {
+	ES_WAIT = 0b00,
+	ES_DOWN = 0b01,
+	ES_UP = 0b10,
+	ES_DC = 0b11 // wont be used (dont care)
 };
 
 struct Elevator {

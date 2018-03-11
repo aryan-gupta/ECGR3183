@@ -1,4 +1,5 @@
 
+#include "main.hpp"
 
 Clock::Clock() {
 	reset(0, 0);
