@@ -35,7 +35,7 @@ void Controller::start() {
 		gLift.mState = ES_WAIT;
 		
 		// wait for the door to open
-		while (gLift.mDoor.mState != DOOR_CLOSED)
+		while (gLift.mDoor.mState == DOOR_CLOSED)
 			;
 		
 		gLift.mStop = false;
@@ -54,7 +54,7 @@ void Controller::start() {
 		// person in the elevator and we will reset to the default
 		// floor
 		if (memEmpty) {
-			auto end = clk::now() + 30s;
+			auto end = clk::now() + 5s; // FIX THIS IT SHOULD BE 30 SECONDS
 			while (clk::now() < end) {
 				if (!gMem.isEmpty()) // user pushed a floor button
 					break;

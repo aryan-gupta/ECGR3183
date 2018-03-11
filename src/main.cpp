@@ -55,8 +55,8 @@ int main() {
 	std::cout << "At time = 0-" << endl;
 	output();
 	
-	gStart = true;
 	gMem.setFloor(FG);
+	gStart = true;
 	
 	cout << "At time = 0+" << endl;
 	output();
@@ -89,7 +89,8 @@ void output() {
 	
 	cout << "Elevator Floor: " << std::to_string(static_cast<int>(gLift.mFloor)) << endl;
 	cout << "Elevator State: " << pretty(gLift.mState) << endl;
-	
+	cout << "Elevator Stop: " << gLift.mStop << endl;
+	cout << "Door State: " << pretty(gLift.mDoor.mState) << endl;
 	
 	
 }

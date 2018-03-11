@@ -30,8 +30,7 @@ void Elevator::start() {
 			continue;
 		} 
 		
-		if (mStop and mState == ES_WAIT) {
-			//std::cout << "HEre" << std::endl;
+		if (mStop) {
 			mDoor.start();
 		}
 	}

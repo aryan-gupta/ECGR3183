@@ -15,6 +15,24 @@ enum DoorState {
 	DOOR_DC3
 };
 
+inline std::string pretty(DoorState s) {
+	switch (s) {
+		case DOOR_CLOSED:
+			return "Closed";
+		case DOOR_LAT_SND:
+			return "Latch and Sound";
+		case DOOR_OPEN:
+			return "Open";
+		case DOOR_IR:
+			return "Waiting for IR";
+		case DOOR_CLOSING:
+			return "Door Closing";
+			
+		default:
+			return "Broken";
+	}
+}
+
 struct Door {
 	DoorState mState;
 	IR_Sensor mIRSen;
