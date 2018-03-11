@@ -13,17 +13,9 @@ enum class ControllerState {
 	CTR_DC2;
 };
 
-class controller {
+struct Controller {
 	ControllerState mState;
-	
-public:
-	void control();
-	
-	void signalElevReached();
-	void signalDoorClosed();
-	void signalLatched() {
-		if (mState == CTR_WAIT_LATCH)
-			mState = CTR_REPLY;
-	}
+
+	void start();
 	
 };
