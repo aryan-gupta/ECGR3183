@@ -63,12 +63,11 @@ enum class ElevState {
 };
 
 struct Elevator {
-	FloorNum mCurrFloor;
+	FloorNum mFloor;
 	ElevState mState;
 	Door mDoor;
 	
-	// clk::time_point; // this keeps track of when our last state changed
-	
 	void start();
+	void reset(FloorNum flr);
 	
 };

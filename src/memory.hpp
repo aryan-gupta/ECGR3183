@@ -10,5 +10,6 @@ public:
 	FloorNum getFloor(FloorNum current, ElevState dir);
 	void clearMem();
 	void setFloor(FloorNum flr);
+	bool isEmpty();
 	
 };
