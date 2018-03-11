@@ -1,8 +1,22 @@
 
 #include "main.hpp"
 
+#include <thread>
+
+Controller::Controller() {
+	mThread = std::thread{&start, this};
+}
+
+Controller::~Controller() {
+	mThread.join();
+}
+
+
 void Controller::start() {
-	while (true) {
+	while (!gStart)
+		;
+	
+	while (!gStop) {
 		auto floor = gMem.getFloor(); // get the next floor to go to
 		
 		bool memEmpty = gMem.isEmpty();
@@ -17,11 +31,14 @@ void Controller::start() {
 		while (gLift.mFloor != floor)
 			;
 		// set the state to wait
+		gLift.mStop = true;
 		gLift.mState = ES_WAIT;
 		
 		// wait for the door to open
 		while (gLift.mDoor.mState != DOOR_CLOSED)
 			;
+		
+		gLift.mStop = false;
 		
 		// because we aren't in the fire state we will close/open
 		// the door at instant
@@ -49,4 +66,6 @@ void Controller::start() {
 		// will get the default floor, if the loop never iterates then	
 		// the queue is not empty so we want to go to the next floor
 	}
+	
+	std::cout << "Controller exiting" << std::endl;
 }

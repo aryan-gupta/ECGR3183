@@ -64,10 +64,29 @@ enum ElevState {
 	ES_DC = 0b11 // wont be used (dont care)
 };
 
+inline std::string pretty(ElevState s) {
+	switch (s) {
+		case ES_WAIT:
+			return "Waiting";
+		case ES_DOWN:
+			return "Down";
+		case ES_UP:
+			return "Up";
+		default:
+			return "Broken";
+	}
+}
+
 struct Elevator {
 	FloorNum mFloor;
 	ElevState mState;
 	Door mDoor;
+	std::thread mThread;
+	
+	std::atomic_bool mStop;
+	
+	Elevator();
+	~Elevator();
 	
 	void start();
 	void reset(FloorNum flr);

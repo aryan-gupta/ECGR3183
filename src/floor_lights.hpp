@@ -10,6 +10,8 @@ class FloorLights {
 	
 public:
 	FloorLights();
+	~FloorLights();
+	
 	unsigned char getLights();
 	
 	void start();

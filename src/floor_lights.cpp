@@ -7,6 +7,10 @@ FloorLights::FloorLights()
 	mThread = std::thread{&start, this}; // invokes the callable
 }
 
+FloorLights::~FloorLights() {
+	mThread.join();
+}
+
 void FloorLights::start() {
 	while (!gStop) { // So while the global variable hasnt told us to stop
 		unsigned char newValue = 0;

@@ -20,9 +20,10 @@ std::atomic_bool IRon; // This global variable turns on
 std::atomic_bool Sound;
 
 std::atomic_bool gStop;
+std::atomic_bool gStart{ false };
 
-Elevator gLift; // Elevator object
 Controller gControl;
+Elevator gLift; // Elevator object
 Memory gMem;
 Clock gClk;
 
@@ -36,6 +37,7 @@ int main() {
 	FireKey = false;
 	IRon = false;
 	Sound = false;
+	gStop = false;
 	
 	// Scenario 1:
 	// T = 0s: 
@@ -50,46 +52,44 @@ int main() {
 	gClk.reset(9, 0);
 	gLift.reset(F1);
 	// Set the hour and start the gLift
-	std::clog << "At time = 0-" << endl;
+	std::cout << "At time = 0-" << endl;
 	output();
 	
+	gStart = true;
 	gMem.setFloor(FG);
 	
-	clog << "At time = 0+" << endl;
+	cout << "At time = 0+" << endl;
 	output();
 	
-	std::this_thread::sleep_for(15s);
-	
-	clog << "At time = 15-" << endl;
-	output();
-	
-	gMem.setFloor(F2);
-	
-	clog << "At time = 15+" << endl;
-	output();
-	
-	clog << "Waiting for 10s" << endl;
-	std::this_thread::sleep_for(10s);
-	
-	clog << "At time = 25" << endl;
-	output();
-	
-	for (int i = 25; i < 31; ++i) {
-		clog << "At time = " << i << endl;
+	for (int i = 0; i < 15; ++i) {
 		std::this_thread::sleep_for(1s);
+		cout << "At time = " << i << endl;
 		output();
 	}
 	
+	gMem.setFloor(F2);
 	
+	cout << "At time = 15+" << endl;
+	output();
+	
+	for (int i = 15; i < 101; ++i) {
+		std::this_thread::sleep_for(1s);
+		cout << "At time = " << i << endl;
+		output();
+	}
+	
+	exit(0);
 	
 }
 
 
 void output() {
-	using std::clog;
+	using std::cout;
 	using std::endl;
 	
-	clog << "Elevator Floor: " << std::to_string(static_cast<int>(gLift.mFloor)) << endl;
+	cout << "Elevator Floor: " << std::to_string(static_cast<int>(gLift.mFloor)) << endl;
+	cout << "Elevator State: " << pretty(gLift.mState) << endl;
+	
 	
 	
 }

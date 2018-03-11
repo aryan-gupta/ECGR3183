@@ -1,5 +1,7 @@
 #pragma once
 
+#include <thread>
+
 enum class ControllerState {
 	CTR_ASK = 0b00,
 	CTR_UP,
@@ -13,8 +15,12 @@ enum class ControllerState {
 };
 
 struct Controller {
+	std::thread mThread;
 	ControllerState mState;
-
+	
+	Controller();
+	~Controller();
+	
 	void start();
 	
 };
