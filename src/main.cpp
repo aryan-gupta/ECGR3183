@@ -40,29 +40,58 @@ int main() {
 	Sound = false;
 	gStop = false;
 	
-	// Scenario 1:
-	// T = 0s: 
-	//   - The elevator is on the 1st floor at 09:00. A student calls the elevator down to Ground.
-	// T = 15:
-	//   - The student is already in the elevator and presses the 2ndfloor button. 
-	//     When the person gets out of the elevator on the 2ndfloor, 
-	//     no one gets in and the elevator moves to the default position.
+// Scenario 1:
+// T = 0s: 
+//   - The elevator is on the 1st floor at 09:00. A student calls the elevator down to Ground.
+// T = 15:
+//   - The student is already in the elevator and presses the 2ndfloor button. 
+//     When the person gets out of the elevator on the 2ndfloor, 
+//     no one gets in and the elevator moves to the default position.
 	
 	std::thread ptr{ printer };
-	cout << "Running Sim 1" << endl;
 	
-	gClk.reset(9, 0);
+	// cout << "Running Sim 1" << endl;
+	
+	// gClk.reset(9, 0);
+	// gLift.reset(F1);
+	// gMem.setFloor(FG);
+	// gStart = true;
+	
+	// std::this_thread::sleep_for(15s);
+	
+	// gMem.setFloor(F2);
+	
+	
+// T = 0: A group of students call the elevator to the 3 rd floor at 14:59 (the elevator is on 1 st ). When it gets
+// there, the students take 7 seconds to get into the elevator. One of the students presses the 1 st floor
+// button immediately after the doors close. After 2 seconds, another student presses the 2 nd floor button.
+// After another 1 second, a third student presses the Ground floor button. After servicing all requests, the
+// elevator returns to the default floor.
+	cout << "Running Sim 2" << endl;
+	gClk.reset(14, 59);
 	gLift.reset(F1);
-	gMem.setFloor(FG);
+	gMem.setFloor(F3);
 	gStart = true;
 	
-	std::this_thread::sleep_for(15s);
+	while (gLift.mFloor != F3)
+		;
+	IRon = true;
+	while (gLift.mDoor.mState != DOOR_IR)
+		;
 	
+	std::this_thread::sleep_for(7s);
+	
+	IRon = false;
+	while (gLift.mDoor.mState != DOOR_CLOSED)
+		;
+	gMem.setFloor(F1);
+	
+	std::this_thread::sleep_for(2s);
 	gMem.setFloor(F2);
 	
-	// cout << "Running Sim 2" << endl;
-	// gClk.reset(14, 59);
-	// gLift.reset(F1);
+	std::this_thread::sleep_for(1s);
+	gMem.setFloor(FG);
+	
 	
 	// exit(0);
 	
