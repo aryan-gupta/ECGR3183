@@ -28,6 +28,7 @@ Memory gMem;
 Clock gClk;
 
 void output();
+void printer();
 
 int main() {
 	using std::clog;
@@ -47,39 +48,41 @@ int main() {
 	//     When the person gets out of the elevator on the 2ndfloor, 
 	//     no one gets in and the elevator moves to the default position.
 	
-	std::cout << "Running Sim 1" << endl;
+	std::thread ptr{ printer };
+	cout << "Running Sim 1" << endl;
 	
 	gClk.reset(9, 0);
 	gLift.reset(F1);
-	// Set the hour and start the gLift
-	std::cout << "At time = 0-" << endl;
-	output();
-	
 	gMem.setFloor(FG);
 	gStart = true;
 	
-	cout << "At time = 0+" << endl;
-	output();
-	
-	for (int i = 0; i < 15; ++i) {
-		std::this_thread::sleep_for(1s);
-		cout << "At time = " << i << endl;
-		output();
-	}
+	std::this_thread::sleep_for(15s);
 	
 	gMem.setFloor(F2);
 	
-	cout << "At time = 15+" << endl;
-	output();
+	// cout << "Running Sim 2" << endl;
+	// gClk.reset(14, 59);
+	// gLift.reset(F1);
 	
-	for (int i = 15; i < 101; ++i) {
-		std::this_thread::sleep_for(1s);
+	// exit(0);
+	
+	while (!gStop)
+		;
+	
+}
+
+void printer() {
+	using std::cout;
+	using std::endl;
+	
+	while (!gStart)
+		;
+	
+	for (int i = 0; true; ++i) {
 		cout << "At time = " << i << endl;
 		output();
+		std::this_thread::sleep_for(1s);
 	}
-	
-	exit(0);
-	
 }
 
 

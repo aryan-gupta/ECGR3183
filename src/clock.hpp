@@ -4,6 +4,9 @@
 
 #include "main.hpp"
 
+/// THe only thing accessing the clock is the memory
+// no need for multi-thread protection
+
 class Clock {
 	typename clk::time_point mStart; // this stores when the simulation
 	// started, it is absolute

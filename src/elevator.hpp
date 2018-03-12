@@ -5,6 +5,8 @@
 
 #include "door.hpp"
 
+/// CHECKED FOR THREAD SAFTEY //
+
 enum FloorNum {
 	FG = 0,
 	F1,

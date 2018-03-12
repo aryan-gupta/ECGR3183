@@ -5,9 +5,9 @@
 #include <mutex>
 
 ///// NOT THREAD SAFE /////
-// actually doesnt need to be, only thing accessing the meory is the
+// actually doesnt need to be, only thing accessing the memory is the
 // controller and the inputs 
-// f*ck it Im using a mutex, to lazy to thing this through
+// f*ck it Im using a mutex, to lazy to think this through
 
 class Memory {
 	std::queue<FloorNum> mFloors;
