@@ -67,30 +67,53 @@ int main() {
 // button immediately after the doors close. After 2 seconds, another student presses the 2 nd floor button.
 // After another 1 second, a third student presses the Ground floor button. After servicing all requests, the
 // elevator returns to the default floor.
-	cout << "Running Sim 2" << endl;
-	gClk.reset(14, 59);
-	gLift.reset(F1);
-	gMem.setFloor(F3);
+	// cout << "Running Sim 2" << endl;
+	// gClk.reset(14, 59);
+	// gLift.reset(F1);
+	// gMem.setFloor(F3);
+	// gStart = true;
+	
+	// while (gLift.mFloor != F3)
+		// ;
+	// IRon = true;
+	// while (gLift.mDoor.mState != DOOR_IR)
+		// ;
+	
+	// std::this_thread::sleep_for(7s);
+	
+	// IRon = false;
+	// while (gLift.mDoor.mState != DOOR_CLOSED)
+		// ;
+	// gMem.setFloor(F1);
+	
+	// std::this_thread::sleep_for(2s);
+	// gMem.setFloor(F2);
+	
+	// std::this_thread::sleep_for(1s);
+	// gMem.setFloor(FG);
+	
+	
+// T = 0: The elevator is on the 2ndfloorat 13:59. A student calls the elevator to the Ground floor.The student 
+// takes 3 seconds to get into the elevator and presses the 3rdfloor after 2 seconds after the doors close. When 
+// the students comes out of the elevator, another student gets on (assume no additional time is spent, i.e. it 
+// takes 0 seconds for him to get in). This student selects the 1stfloor button immediately upon the closing of 
+// the doors. When the elevator is at the 2ndfloor location, a firefighter calls the elevator from the Ground floor.
+// When the elevator reaches the Ground floor, the firefighter takes 2 seconds to get into the elevator and presses 
+// door closing button after 2 seconds after getting into the elevator. The firefighter goes to the 3rdfloor (the 
+// student did not disembark, the student’s request to go to the 1stfloor was not fulfilled). When the elevator gets 
+// to the 3rdfloor, the firefighter manually opens the door and leaves it open for 5 seconds. The firefighter waits 
+// for1 second before closing the door. Once the door is open, the firefighter waits for 1 second and then presses 
+// the button to go to the Ground floor. When they reach the Ground floor and the firefighter disembarks, the elevator
+// goes out of Firefighter mode and resumes normal operation.
+	cout << "Running Sim 3" << endl;
+	gClk.reset(13, 59);
+	gLift.reset(F2);
+	gMem.setFloor(FG);
+	
 	gStart = true;
 	
-	while (gLift.mFloor != F3)
-		;
-	IRon = true;
 	while (gLift.mDoor.mState != DOOR_IR)
 		;
-	
-	std::this_thread::sleep_for(7s);
-	
-	IRon = false;
-	while (gLift.mDoor.mState != DOOR_CLOSED)
-		;
-	gMem.setFloor(F1);
-	
-	std::this_thread::sleep_for(2s);
-	gMem.setFloor(F2);
-	
-	std::this_thread::sleep_for(1s);
-	gMem.setFloor(FG);
 	
 	
 	// exit(0);

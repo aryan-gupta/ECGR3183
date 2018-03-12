@@ -42,8 +42,10 @@ void Controller::start() {
 		
 		// because we aren't in the fire state we will close/open
 		// the door at instant
-		gLift.mDoor.mConDoorOpen = true;
-		gLift.mDoor.mConDoorClose = true; 
+		if (!FireKey) {
+			gLift.mDoor.mConDoorOpen = true;
+			gLift.mDoor.mConDoorClose = true;
+		}
 		
 		// Wit for the door to close
 		while (gLift.mDoor.mState != DOOR_CLOSED)
