@@ -20,15 +20,6 @@ void Memory::setFloor(FloorNum flr) {
 	mFloors.push(flr);
 }
 
-FloorNum Memory::getFloor(FloorNum current, ElevState dir) {
-	if (mFloors.size() == 0)
-		return getDefaultFloor();
-	
-	auto flr = mFloors.front();
-	mFloors.pop();
-	return flr;
-}
-
 FloorNum Memory::getFloor() {
 	std::lock_guard<std::mutex> { mGuard };
 	
@@ -42,7 +33,7 @@ FloorNum Memory::getFloor() {
 
 
 FloorNum Memory::getDefaultFloor() {
-	// return F1;
+	return F1;
 	auto hour = gClk.getHour();
 	
 	//std::cout << "........................................" << std::to_string(hour) << std::endl;

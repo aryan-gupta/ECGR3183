@@ -27,12 +27,14 @@ void FloorLights::start() {
 			case ES_UP: {
 				int shift = static_cast<int>(eleFloor);
 				newValue |= (0x80 >> shift);
-			}
+			} break;
 			
 			case ES_DOWN: {
 				int shift = static_cast<int>(eleFloor);
 				newValue |= (0x01 << shift);
-			}
+			} break;
+			
+			default: break;
 		}
 		
 		X20 = newValue;

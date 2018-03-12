@@ -14,7 +14,6 @@ class Memory {
 	std::mutex mGuard;
 	
 public:
-	FloorNum getFloor(FloorNum current, ElevState dir);
 	FloorNum getFloor();
 	FloorNum getDefaultFloor();
 	void clearMem();
