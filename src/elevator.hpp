@@ -21,7 +21,7 @@ public:
 
 /// I know I know What am I doing here, Do I even know C++.
 /// Ill fix it later
-inline void operator++ (FloorNum& a) {
+inline void inc(std::atomic<FloorNum>& a) {
 	switch (a) {
 		case FG: a = F1; return;
 		case F1: a = F2; return;
@@ -30,16 +30,7 @@ inline void operator++ (FloorNum& a) {
 	}
 }
 
-inline void operator++ (FloorNum& a, int) {
-	switch (a) {
-		case FG: a = F1; return;
-		case F1: a = F2; return;
-		case F2: a = F3; return;
-		default:         throw invalid_floor_reached();
-	}
-}
-
-inline void operator-- (FloorNum& a) {
+inline void dec(std::atomic<FloorNum>& a) {
 	switch (a) {
 		case F1: a = FG; return;
 		case F2: a = F1; return;
@@ -48,14 +39,41 @@ inline void operator-- (FloorNum& a) {
 	}
 }
 
-inline void operator-- (FloorNum& a, int) {
-	switch (a) {
-		case F1: a = FG; return;
-		case F2: a = F1; return;
-		case F3: a = F2; return;
-		default:         throw invalid_floor_reached();
-	}
-}
+// inline void operator++ (FloorNum& a) {
+	// switch (a) {
+		// case FG: a = F1; return;
+		// case F1: a = F2; return;
+		// case F2: a = F3; return;
+		// default:         throw invalid_floor_reached();
+	// }
+// }
+
+// inline void operator++ (FloorNum& a, int) {
+	// switch (a) {
+		// case FG: a = F1; return;
+		// case F1: a = F2; return;
+		// case F2: a = F3; return;
+		// default:         throw invalid_floor_reached();
+	// }
+// }
+
+// inline void operator-- (FloorNum& a) {
+	// switch (a) {
+		// case F1: a = FG; return;
+		// case F2: a = F1; return;
+		// case F3: a = F2; return;
+		// default:         throw invalid_floor_reached();
+	// }
+// }
+
+// inline void operator-- (FloorNum& a, int) {
+	// switch (a) {
+		// case F1: a = FG; return;
+		// case F2: a = F1; return;
+		// case F3: a = F2; return;
+		// default:         throw invalid_floor_reached();
+	// }
+// }
 
 enum ElevState {
 	ES_WAIT = 0b00,
@@ -78,8 +96,8 @@ inline std::string pretty(ElevState s) {
 }
 
 struct Elevator {
-	FloorNum mFloor;
-	ElevState mState;
+	std::atomic<FloorNum> mFloor;
+	std::atomic<ElevState> mState;
 	Door mDoor;
 	std::thread mThread;
 	

@@ -13,7 +13,7 @@ void IR_Sensor::start() {
 		
 		bool startOver = false;
 		auto end = clk::now() + 2s;
-		while (clk::now() > end) {
+		while (clk::now() < end) {
 			if (IRon) {
 				startOver = true;
 				break;

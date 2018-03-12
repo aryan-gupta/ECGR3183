@@ -16,23 +16,23 @@ void Elevator::start() {
 		;
 	
 	while (!gStop) {
+		if (mStop) {
+			mDoor.start();
+		}
+		
 		if (mState == ES_UP) {
-			mFloor++;
+			inc(mFloor);
 			
 			std::this_thread::sleep_for(5s);
 			continue;
 		}
 		
 		if (mState == ES_DOWN) {
-			mFloor--;
+			dec(mFloor);
 			
 			std::this_thread::sleep_for(5s);
 			continue;
 		} 
-		
-		if (mStop) {
-			mDoor.start();
-		}
 	}
 	
 	std::cout << "Elevator exiting" << std::endl;

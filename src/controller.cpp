@@ -32,13 +32,13 @@ void Controller::start() {
 			;
 		// set the state to wait
 		gLift.mStop = true;
-		gLift.mState = ES_WAIT;
 		
 		// wait for the door to open
 		while (gLift.mDoor.mState == DOOR_CLOSED)
 			;
 		
 		gLift.mStop = false;
+		gLift.mState = ES_WAIT;
 		
 		// because we aren't in the fire state we will close/open
 		// the door at instant

@@ -1,7 +1,11 @@
 
+#include <mutex>
+
 #include "main.hpp"
 
 void Memory::clearMem() {
+	std::lock_guard<std::mutex> { mGuard };
+	
 	// https://stackoverflow.com/questions/709146
 	decltype(mFloors) empty;
 	std::swap(mFloors, empty);
@@ -12,6 +16,7 @@ bool Memory::isEmpty() {
 }
 
 void Memory::setFloor(FloorNum flr) {
+	std::lock_guard<std::mutex> { mGuard };
 	mFloors.push(flr);
 }
 
@@ -25,6 +30,8 @@ FloorNum Memory::getFloor(FloorNum current, ElevState dir) {
 }
 
 FloorNum Memory::getFloor() {
+	std::lock_guard<std::mutex> { mGuard };
+	
 	if (mFloors.size() == 0)
 		return getDefaultFloor();
 	

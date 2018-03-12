@@ -16,10 +16,10 @@ void FloorLights::start() {
 		unsigned char newValue = 0;
 		
 		/// get the state from the elevator
-		auto eleState = gLift.mState;
+		ElevState eleState = gLift.mState;
 		
 		/// get current floor from the elevator
-		auto eleFloor = gLift.mFloor;
+		FloorNum eleFloor = gLift.mFloor;
 		
 		switch (eleState) {
 			case ES_WAIT: continue; // if we are waiting then dont shine any lights
