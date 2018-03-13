@@ -154,6 +154,23 @@ int main() {
 	gLift.mDoor.mConDoorClose = true;
 	gMem.setFloor(F3);
 	
+	while (mLift.mDoor.mState != DOOR_LAT_SND)
+		;
+	
+	gLift.mDoor.mConDoorOpen = true;
+	
+	std::this_thread::sleep_for(6s);
+	
+	gLift.mDoor.mConDoorClose = true;
+	
+	while (mLift.mDoor.mState != DOOR_LAT_SND)
+		;
+	
+	std::this_thread::sleep_for(1s);
+	
+	mMem.setFloor(FG);
+	
+	while (mLift.mDoor.mState != )
 	
 	
 	
