@@ -51,6 +51,9 @@ void Controller::start() {
 		while (gLift.mDoor.mState != DOOR_CLOSED)
 			;
 		
+		gLift.mDoor.mConDoorOpen = false;
+		gLift.mDoor.mConDoorClose = false;
+		
 		// wait for the person to hit a button if the user doesnt 
 		// press a button for 30 secs, we will assume there is no
 		// person in the elevator and we will reset to the default

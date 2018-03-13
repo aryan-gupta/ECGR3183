@@ -97,7 +97,9 @@ int main() {
 // takes 3 seconds to get into the elevator and presses the 3rdfloor after 2 seconds after the doors close. When 
 // the students comes out of the elevator, another student gets on (assume no additional time is spent, i.e. it 
 // takes 0 seconds for him to get in). This student selects the 1stfloor button immediately upon the closing of 
-// the doors. When the elevator is at the 2ndfloor location, a firefighter calls the elevator from the Ground floor.
+// the doors. 
+
+// When the elevator is at the 2ndfloor location, a firefighter calls the elevator from the Ground floor.
 // When the elevator reaches the Ground floor, the firefighter takes 2 seconds to get into the elevator and presses 
 // door closing button after 2 seconds after getting into the elevator. The firefighter goes to the 3rdfloor (the 
 // student did not disembark, the student’s request to go to the 1stfloor was not fulfilled). When the elevator gets 
@@ -112,8 +114,50 @@ int main() {
 	
 	gStart = true;
 	
+	while (gLift.mFloor != FG)
+		;
+	
+	IRon = true;
 	while (gLift.mDoor.mState != DOOR_IR)
 		;
+	
+	std::this_thread::sleep_for(3s);
+	
+	while (gLift.mDoor.mState != DOOR_CLOSED)
+		;
+	
+	std::this_thread::sleep_for(2s);
+	
+	gMem.setFloor(F3);
+	
+	while (gLift.mDoor.mState != DOOR_IR)
+		;
+	
+	while (gLift.mDoor.mState != DOOR_CLOSED)
+		;
+	
+	gMem.setFloor(F1);
+	
+	while (gLift.mFloor != F2)
+		;
+	
+	FireKey = true;
+	gMem.clear();
+	gMem.setFloor(FG);
+	gLift.mDoor.mConDoorOpen = true;
+	
+	while (mLift.mDoor.mState != DOOR_IR)
+		;
+	
+	std::this_thread::sleep_for(4s);
+	
+	gLift.mDoor.mConDoorClose = true;
+	gMem.setFloor(F3);
+	
+	
+	
+	
+	
 	
 	
 	// exit(0);

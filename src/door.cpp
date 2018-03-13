@@ -17,9 +17,11 @@ void Door::start() {
 	mState = DOOR_OPEN;
 	std::this_thread::sleep_for(1s); // Door is opening
 	
+	// Door is open, now let people in and out
+	mState = DOOR_IR; // Honestly this should be called Door Wait
+	// but too lazy to change
+	
 	if (!FireKey) {
-		// Door is open, now let people in and out
-		mState = DOOR_IR;
 		mIRSen.start(); // This is a blocking function
 		// this function will start the IRSensor and wait
 		// for its finish to close the door
