@@ -41,10 +41,10 @@ FloorNum Memory::getFloor() {
 
 
 FloorNum Memory::getDefaultFloor() {
-	return F1;
+	// return F1;
 	auto hour = gClk.getHour();
 	
-	//std::cout << "........................................" << std::to_string(hour) << std::endl;
+	// std::cout << "........................................" << std::to_string(hour) << std::endl;
 	
 	if (hour > 8 and hour < 14)
 		return F1;

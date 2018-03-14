@@ -14,9 +14,16 @@ void Clock::reset(unsigned h, unsigned m) {
 
 // https://stackoverflow.com/questions/15957805/
 unsigned Clock::getHour() {
-	time_t tt = clk::to_time_t(mStart);
-	tm local_tm = *localtime(&tt);
-	return local_tm.tm_hour;
+	auto elapsed = clk::now() - mStart;
+	auto hour = std::chrono::duration_cast<std::chrono::hours>(elapsed).count();
+	auto min = std::chrono::duration_cast<std::chrono::minutes>(elapsed).count();
+	
+	if ((min + mMinute) >= 60)
+		++hour;
+	
+	// std::cout << "..............................TIME: " << (hour + mHour) << std::endl;
+	
+	return hour + mHour;
 }
 
 unsigned Clock::getMin() {
