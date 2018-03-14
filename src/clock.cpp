@@ -28,6 +28,8 @@ unsigned Clock::getHour() {
 	return hour + mHour;
 }
 
+/// depreciated, using [[depreciated]] is giving me warning cause im
+/// to lazy to turn on c++17
 unsigned Clock::getMin() {
 	time_t tt = clk::to_time_t(mStart);
 	tm local_tm = *localtime(&tt);

@@ -31,7 +31,7 @@ void Controller::start() {
 		if (floor < gLift.mFloor)
 			gLift.mState = ES_DOWN;
 		
-		// Wait for the elevator to get to the floor
+		// Wait for the elevator to get to the floor unless FIRE!!
 		while (gLift.mFloor != floor) {
 			if (FireKey and !fire) {
 				break;

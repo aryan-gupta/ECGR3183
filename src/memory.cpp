@@ -3,11 +3,12 @@
 
 #include "main.hpp"
 
+// deprecated cant use [[depreciated]]
 void Memory::clearMem() {
 	std::lock_guard<std::mutex> { mGuard };
 	
 	// https://stackoverflow.com/questions/709146
-	decltype(mFloors) empty;
+	decltype(mFloors) empty; // swap with an empty one
 	std::swap(mFloors, empty);
 }
 
@@ -21,17 +22,17 @@ void Memory::setFloor(FloorNum flr) {
 		return;
 	}
 	
-	std::lock_guard<std::mutex> { mGuard };
+	std::lock_guard<std::mutex> { mGuard }; // Protection
 	mFloors.push(flr);
 }
 
 FloorNum Memory::getFloor() {
-	if (FireKey)
+	if (FireKey) // no need for protection 
 		return mFireFloor;
 	
 	std::lock_guard<std::mutex> { mGuard };
 	
-	if (mFloors.size() == 0)
+	if (mFloors.empty())
 		return getDefaultFloor();
 	
 	auto flr = mFloors.front();
@@ -41,7 +42,7 @@ FloorNum Memory::getFloor() {
 
 
 FloorNum Memory::getDefaultFloor() {
-	// return F1;
+	// return F1; /// FOR TESTING PURPOSES ONLY
 	auto hour = gClk.getHour();
 	
 	// std::cout << "........................................" << std::to_string(hour) << std::endl;

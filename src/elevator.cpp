@@ -1,9 +1,8 @@
 
 #include "main.hpp"
 
-Elevator::Elevator() {
-	mStop = false;
-	mState = ES_WAIT;
+Elevator::Elevator()
+: mState{ ES_WAIT }, mStop{ false } {
 	mThread = std::thread{&start, this};
 }
 
@@ -12,16 +11,16 @@ Elevator::~Elevator() {
 }
 
 void Elevator::start() {
-	while (!gStart)
+	while (!gStart) // Wait for all go signal
 		;
 	
 	while (!gStop) {
-		if (mStop) {
+		if (mStop) { // Controller wants us to stop at this foor
 			mDoor.start();
 		}
 		
 		if (mState == ES_UP) {
-			inc(mFloor);
+			inc(mFloor); // to lazy to change it back to ++/--
 			
 			std::this_thread::sleep_for(5s);
 			continue;
