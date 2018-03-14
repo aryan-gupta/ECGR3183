@@ -26,6 +26,7 @@ Controller gControl;
 Elevator gLift; // Elevator object
 Memory gMem;
 Clock gClk;
+FloorLights gFL;
 
 void output();
 void printer();
@@ -164,6 +165,9 @@ int main() {
 	
 	gLift.mDoor.mConDoorOpen = true;
 	
+	while (gLift.mDoor.mState != DOOR_IR)
+		;
+	
 	std::this_thread::sleep_for(6s);
 	
 	gLift.mDoor.mConDoorClose = true;
@@ -214,10 +218,15 @@ void output() {
 	using std::cout;
 	using std::endl;
 	
-	cout << "Elevator Floor: " << std::to_string(static_cast<int>(gLift.mFloor)) << endl;
-	cout << "Elevator State: " << pretty(gLift.mState) << endl;
-	cout << "Elevator Stop: " << gLift.mStop << endl;
-	cout << "Door State: " << pretty(gLift.mDoor.mState) << endl;
+	cout << "Elevator Floor:  " << std::to_string(static_cast<int>(gLift.mFloor)) << endl;
+	cout << "Elevator State:  " << pretty(gLift.mState) << endl;
+	// cout << "Elevator Stop:   " << gLift.mStop << endl;
+	cout << "Door State:      " << pretty(gLift.mDoor.mState) << endl;
+	cout << "Fire State:      " << FireKey << endl;
+	cout << "X20 register:    " << std::to_string(gFL.getLights()) << endl;
+	cout << "Sound:           " << Sound << endl;
+	
+	cout << endl;
 	
 	
 }

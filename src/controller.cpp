@@ -16,7 +16,11 @@ void Controller::start() {
 	while (!gStart)
 		;
 	
+	bool fire = false;
+	
 	while (!gStop) {
+		if (!FireKey) fire = false;
+		
 		auto floor = gMem.getFloor(); // get the next floor to go to
 		
 		bool memEmpty = gMem.isEmpty();
@@ -28,15 +32,20 @@ void Controller::start() {
 			gLift.mState = ES_DOWN;
 		
 		// Wait for the elevator to get to the floor
-		bool fire = false;
 		while (gLift.mFloor != floor) {
-			if (FireKey) {
-				fire = true;
+			if (FireKey and !fire) {
 				break;
 			}
+			
+			if (!FireKey) fire = false;
 		}
 		
-		if (fire) continue;
+		if (FireKey and !fire) {
+			fire = true;
+			continue;
+		}
+		
+		if (!FireKey) fire = false;
 		
 		// set the state to wait
 		gLift.mStop = true;

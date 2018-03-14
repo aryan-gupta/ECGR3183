@@ -25,3 +25,4 @@ extern Elevator gLift;
 extern Controller gControl;
 extern Memory gMem;
 extern Clock gClk;
+extern FloorLights gFL;

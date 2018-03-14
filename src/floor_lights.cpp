@@ -31,13 +31,18 @@ void FloorLights::start() {
 			
 			case ES_DOWN: {
 				int shift = static_cast<int>(eleFloor);
-				newValue |= (0x01 << shift);
+				newValue |= (0x01 << (3 - shift));
 			} break;
 			
 			default: break;
 		}
 		
 		X20 = newValue;
+		
+		std::this_thread::sleep_for(5s); // SOOO
+		// My testing computer has 2 threads -- hyperthreaded
+		// thos thread is the least significant so Im adding this
+		// in a higher core machine, remove this
 	}
 }
 
