@@ -13,6 +13,8 @@ class Memory {
 	std::queue<FloorNum> mFloors;
 	std::mutex mGuard;
 	
+	FloorNum mFireFloor;
+	
 public:
 	FloorNum getFloor();
 	FloorNum getDefaultFloor();

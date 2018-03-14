@@ -16,11 +16,19 @@ bool Memory::isEmpty() {
 }
 
 void Memory::setFloor(FloorNum flr) {
+	if (FireKey) {
+		mFireFloor = flr;
+		return;
+	}
+	
 	std::lock_guard<std::mutex> { mGuard };
 	mFloors.push(flr);
 }
 
 FloorNum Memory::getFloor() {
+	if (FireKey)
+		return mFireFloor;
+	
 	std::lock_guard<std::mutex> { mGuard };
 	
 	if (mFloors.size() == 0)

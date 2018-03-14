@@ -123,6 +123,8 @@ int main() {
 	
 	std::this_thread::sleep_for(3s);
 	
+	IRon = false;
+	
 	while (gLift.mDoor.mState != DOOR_CLOSED)
 		;
 	
@@ -142,11 +144,14 @@ int main() {
 		;
 	
 	FireKey = true;
-	gMem.clear();
 	gMem.setFloor(FG);
+	
+	while (gLift.mDoor.mState != DOOR_LAT_SND)
+		;
+	
 	gLift.mDoor.mConDoorOpen = true;
 	
-	while (mLift.mDoor.mState != DOOR_IR)
+	while (gLift.mDoor.mState != DOOR_IR)
 		;
 	
 	std::this_thread::sleep_for(4s);
@@ -154,7 +159,7 @@ int main() {
 	gLift.mDoor.mConDoorClose = true;
 	gMem.setFloor(F3);
 	
-	while (mLift.mDoor.mState != DOOR_LAT_SND)
+	while (gLift.mDoor.mState != DOOR_LAT_SND)
 		;
 	
 	gLift.mDoor.mConDoorOpen = true;
@@ -163,17 +168,23 @@ int main() {
 	
 	gLift.mDoor.mConDoorClose = true;
 	
-	while (mLift.mDoor.mState != DOOR_LAT_SND)
+	while (gLift.mDoor.mState != DOOR_CLOSED)
 		;
 	
 	std::this_thread::sleep_for(1s);
 	
-	mMem.setFloor(FG);
+	gMem.setFloor(FG);
 	
-	while (mLift.mDoor.mState != )
+	while (gLift.mDoor.mState != DOOR_LAT_SND)
+		;
 	
+	gLift.mDoor.mConDoorOpen = true;
+	gLift.mDoor.mConDoorClose = true;
 	
+	while (gLift.mDoor.mState != DOOR_CLOSED)
+		;
 	
+	FireKey = false;	
 	
 	
 	

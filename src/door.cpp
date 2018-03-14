@@ -10,7 +10,7 @@ void Door::start() {
 	
 	// Door is latched now we wait for the controller to tell us to
 	// open the gate
-	while (!mConDoorOpen) { std::this_thread::yield(); }
+	while (!mConDoorOpen) ;// { std::this_thread::yield(); }
 	
 	// Open Door (Turn off sound too)
 	Sound = false;
@@ -28,7 +28,7 @@ void Door::start() {
 	}
 	
 	// Wait for the controller to send close door signal
-	while (!mConDoorClose) { std::this_thread::yield(); }
+	while (!mConDoorClose) ;// { std::this_thread::yield(); }
 	mState = DOOR_CLOSING;
 	std::this_thread::sleep_for(1s); // Door is closing
 	
