@@ -57,16 +57,18 @@ int main() {
 	
 	std::thread ptr{ printer };
 	
-	// cout << "Running Sim 1" << endl;
-	
-	// gClk.reset(9, 0);
-	// gLift.reset(F1);
-	// gMem.setFloor(FG);
-	// gStart = true;
-	
-	// std::this_thread::sleep_for(15s);
-	
-	// gMem.setFloor(F2);
+	if (sim == 1) {
+		cout << "Running Sim 1" << endl;
+		
+		gClk.reset(9, 0);
+		gLift.reset(F1);
+		gMem.setFloor(FG);
+		gStart = true;
+		
+		std::this_thread::sleep_for(15s);
+		
+		gMem.setFloor(F2);
+	}
 	
 	
 // T = 0: A group of students call the elevator to the 3 rd floor at 14:59 (the elevator is on 1 st ). When it gets
@@ -74,6 +76,8 @@ int main() {
 // button immediately after the doors close. After 2 seconds, another student presses the 2 nd floor button.
 // After another 1 second, a third student presses the Ground floor button. After servicing all requests, the
 // elevator returns to the default floor.
+
+if (sim == 2) {
 	cout << "Running Sim 2" << endl;
 	gClk.reset(14, 59);
 	gLift.reset(F1);
@@ -98,7 +102,7 @@ int main() {
 	
 	std::this_thread::sleep_for(1s);
 	gMem.setFloor(FG);
-	
+}
 	
 // T = 0: The elevator is on the 2ndfloorat 13:59. A student calls the elevator to the Ground floor.The student 
 // takes 3 seconds to get into the elevator and presses the 3rdfloor after 2 seconds after the doors close. When 
@@ -114,88 +118,90 @@ int main() {
 // for1 second before closing the door. Once the door is open, the firefighter waits for 1 second and then presses 
 // the button to go to the Ground floor. When they reach the Ground floor and the firefighter disembarks, the elevator
 // goes out of Firefighter mode and resumes normal operation.
-	// cout << "Running Sim 3" << endl;
-	// gClk.reset(13, 59);
-	// gLift.reset(F2);
-	// gMem.setFloor(FG);
+
+if (sim == 3) {
+	cout << "Running Sim 3" << endl;
+	gClk.reset(13, 59);
+	gLift.reset(F2);
+	gMem.setFloor(FG);
 	
-	// gStart = true;
+	gStart = true;
 	
-	// while (gLift.mFloor != FG)
-		// ;
+	while (gLift.mFloor != FG)
+		;
 	
-	// IRon = true;
-	// while (gLift.mDoor.mState != DOOR_IR)
-		// ;
+	IRon = true;
+	while (gLift.mDoor.mState != DOOR_IR)
+		;
 	
-	// std::this_thread::sleep_for(3s);
+	std::this_thread::sleep_for(3s);
 	
-	// IRon = false;
+	IRon = false;
 	
-	// while (gLift.mDoor.mState != DOOR_CLOSED)
-		// ;
+	while (gLift.mDoor.mState != DOOR_CLOSED)
+		;
 	
-	// std::this_thread::sleep_for(2s);
+	std::this_thread::sleep_for(2s);
 	
-	// gMem.setFloor(F3);
+	gMem.setFloor(F3);
 	
-	// while (gLift.mDoor.mState != DOOR_IR)
-		// ;
+	while (gLift.mDoor.mState != DOOR_IR)
+		;
 	
-	// while (gLift.mDoor.mState != DOOR_CLOSED)
-		// ;
+	while (gLift.mDoor.mState != DOOR_CLOSED)
+		;
 	
-	// gMem.setFloor(F1);
+	gMem.setFloor(F1);
 	
-	// while (gLift.mFloor != F2)
-		// ;
+	while (gLift.mFloor != F2)
+		;
 	
-	// FireKey = true;
-	// gMem.setFloor(FG);
+	FireKey = true;
+	gMem.setFloor(FG);
 	
-	// while (gLift.mDoor.mState != DOOR_LAT_SND)
-		// ;
+	while (gLift.mDoor.mState != DOOR_LAT_SND)
+		;
 	
-	// gLift.mDoor.mConDoorOpen = true;
+	gLift.mDoor.mConDoorOpen = true;
 	
-	// while (gLift.mDoor.mState != DOOR_IR)
-		// ;
+	while (gLift.mDoor.mState != DOOR_IR)
+		;
 	
-	// std::this_thread::sleep_for(4s);
+	std::this_thread::sleep_for(4s);
 	
-	// gLift.mDoor.mConDoorClose = true;
-	// gMem.setFloor(F3);
+	gLift.mDoor.mConDoorClose = true;
+	gMem.setFloor(F3);
 	
-	// while (gLift.mDoor.mState != DOOR_LAT_SND)
-		// ;
+	while (gLift.mDoor.mState != DOOR_LAT_SND)
+		;
 	
-	// gLift.mDoor.mConDoorOpen = true;
+	gLift.mDoor.mConDoorOpen = true;
 	
-	// while (gLift.mDoor.mState != DOOR_IR)
-		// ;
+	while (gLift.mDoor.mState != DOOR_IR)
+		;
 	
-	// std::this_thread::sleep_for(6s);
+	std::this_thread::sleep_for(6s);
 	
-	// gLift.mDoor.mConDoorClose = true;
+	gLift.mDoor.mConDoorClose = true;
 	
-	// while (gLift.mDoor.mState != DOOR_CLOSED)
-		// ;
+	while (gLift.mDoor.mState != DOOR_CLOSED)
+		;
 	
-	// std::this_thread::sleep_for(1s);
+	std::this_thread::sleep_for(1s);
 	
-	// gMem.setFloor(FG);
+	gMem.setFloor(FG);
 	
-	// while (gLift.mDoor.mState != DOOR_LAT_SND)
-		// ;
+	while (gLift.mDoor.mState != DOOR_LAT_SND)
+		;
 	
-	// gLift.mDoor.mConDoorOpen = true;
-	// gLift.mDoor.mConDoorClose = true;
+	gLift.mDoor.mConDoorOpen = true;
+	gLift.mDoor.mConDoorClose = true;
 	
-	// while (gLift.mDoor.mState != DOOR_CLOSED)
-		// ;
+	while (gLift.mDoor.mState != DOOR_CLOSED)
+		;
 	
-	// FireKey = false;	
-	
+	FireKey = false;	
+}
 	
 	
 	// exit(0);
