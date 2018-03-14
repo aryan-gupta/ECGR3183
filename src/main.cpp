@@ -37,7 +37,7 @@ void printer();
 
 struct Token;
 // std::vector<Token> parser(std::string_view file); // not using c++ 17
-std::vector<Token> parser(std::string file); // not using c++ 17
+std::vector<Token> parser(std::string file); 
 void runner(std::vector<Token>& dat);
 
 int main(int argc, char* argv[]) {
@@ -56,13 +56,13 @@ int main(int argc, char* argv[]) {
 	
 	auto pdat = parser(argv[1]);
 	runner(pdat);
+/*	
+	//exit(0);
 	
-	exit(0);
-	
-	int sim;
-	std::cout << "Which sim would you like to run?" << std::endl;
-	std::cout << ":: ";
-	std::cin >> sim;
+	// int sim;
+	// std::cout << "Which sim would you like to run?" << std::endl;
+	// std::cout << ":: ";
+	// std::cin >> sim;
 	
 	
 // Scenario 1:
@@ -73,18 +73,18 @@ int main(int argc, char* argv[]) {
 //     When the person gets out of the elevator on the 2ndfloor, 
 //     no one gets in and the elevator moves to the default position.
 	
-	if (sim == 1) {
-		cout << "Running Sim 1" << endl;
+	// if (sim == 1) {
+		// cout << "Running Sim 1" << endl;
 		
-		gClk.reset(9, 0);
-		gLift.reset(F1);
-		gMem.setFloor(FG);
-		gStart = true;
+		// gClk.reset(9, 0);
+		// gLift.reset(F1);
+		// gMem.setFloor(FG);
+		// gStart = true;
 		
-		std::this_thread::sleep_for(15s);
+		// std::this_thread::sleep_for(15s);
 		
-		gMem.setFloor(F2);
-	}
+		// gMem.setFloor(F2);
+	// }
 	
 	
 // T = 0: A group of students call the elevator to the 3 rd floor at 14:59 (the elevator is on 1 st ). When it gets
@@ -93,32 +93,32 @@ int main(int argc, char* argv[]) {
 // After another 1 second, a third student presses the Ground floor button. After servicing all requests, the
 // elevator returns to the default floor.
 
-if (sim == 2) {
-	cout << "Running Sim 2" << endl;
-	gClk.reset(14, 59);
-	gLift.reset(F1);
-	gMem.setFloor(F3);
-	gStart = true;
+// if (sim == 2) {
+	// cout << "Running Sim 2" << endl;
+	// gClk.reset(14, 59);
+	// gLift.reset(F1);
+	// gMem.setFloor(F3);
+	// gStart = true;
 	
-	while (gLift.mFloor != F3)
-		;
-	IRon = true;
-	while (gLift.mDoor.mState != DOOR_IR)
-		;
+	// while (gLift.mFloor != F3)
+		// ;
+	// IRon = true;
+	// while (gLift.mDoor.mState != DOOR_IR)
+		// ;
 	
-	std::this_thread::sleep_for(7s);
+	// std::this_thread::sleep_for(7s);
 	
-	IRon = false;
-	while (gLift.mDoor.mState != DOOR_CLOSED)
-		;
-	gMem.setFloor(F1);
+	// IRon = false;
+	// while (gLift.mDoor.mState != DOOR_CLOSED)
+		// ;
+	// gMem.setFloor(F1);
 	
-	std::this_thread::sleep_for(2s);
-	gMem.setFloor(F2);
+	// std::this_thread::sleep_for(2s);
+	// gMem.setFloor(F2);
 	
-	std::this_thread::sleep_for(1s);
-	gMem.setFloor(FG);
-}
+	// std::this_thread::sleep_for(1s);
+	// gMem.setFloor(FG);
+// }
 	
 // T = 0: The elevator is on the 2ndfloorat 13:59. A student calls the elevator to the Ground floor.The student 
 // takes 3 seconds to get into the elevator and presses the 3rdfloor after 2 seconds after the doors close. When 
@@ -135,90 +135,90 @@ if (sim == 2) {
 // the button to go to the Ground floor. When they reach the Ground floor and the firefighter disembarks, the elevator
 // goes out of Firefighter mode and resumes normal operation.
 
-if (sim == 3) {
-	cout << "Running Sim 3" << endl;
-	gClk.reset(13, 59);
-	gLift.reset(F2);
-	gMem.setFloor(FG);
+// if (sim == 3) {
+	// cout << "Running Sim 3" << endl;
+	// gClk.reset(13, 59);
+	// gLift.reset(F2);
+	// gMem.setFloor(FG);
 	
-	gStart = true;
+	// gStart = true;
 	
-	while (gLift.mFloor != FG)
-		;
+	// while (gLift.mFloor != FG)
+		// ;
 	
-	IRon = true;
-	while (gLift.mDoor.mState != DOOR_IR)
-		;
+	// IRon = true;
+	// while (gLift.mDoor.mState != DOOR_IR)
+		// ;
 	
-	std::this_thread::sleep_for(3s);
+	// std::this_thread::sleep_for(3s);
 	
-	IRon = false;
+	// IRon = false;
 	
-	while (gLift.mDoor.mState != DOOR_CLOSED)
-		;
+	// while (gLift.mDoor.mState != DOOR_CLOSED)
+		// ;
 	
-	std::this_thread::sleep_for(2s);
+	// std::this_thread::sleep_for(2s);
 	
-	gMem.setFloor(F3);
+	// gMem.setFloor(F3);
 	
-	while (gLift.mDoor.mState != DOOR_IR)
-		;
+	// while (gLift.mDoor.mState != DOOR_IR)
+		// ;
 	
-	while (gLift.mDoor.mState != DOOR_CLOSED)
-		;
+	// while (gLift.mDoor.mState != DOOR_CLOSED)
+		// ;
 	
-	gMem.setFloor(F1);
+	// gMem.setFloor(F1);
 	
-	while (gLift.mFloor != F2)
-		;
+	// while (gLift.mFloor != F2)
+		// ;
 	
-	FireKey = true;
-	gMem.setFloor(FG);
+	// FireKey = true;
+	// gMem.setFloor(FG);
 	
-	while (gLift.mDoor.mState != DOOR_LAT_SND)
-		;
+	// while (gLift.mDoor.mState != DOOR_LAT_SND)
+		// ;
 	
-	gLift.mDoor.mConDoorOpen = true;
+	// gLift.mDoor.mConDoorOpen = true;
 	
-	while (gLift.mDoor.mState != DOOR_IR)
-		;
+	// while (gLift.mDoor.mState != DOOR_IR)
+		// ;
 	
-	std::this_thread::sleep_for(4s);
+	// std::this_thread::sleep_for(4s);
 	
-	gLift.mDoor.mConDoorClose = true;
-	gMem.setFloor(F3);
+	// gLift.mDoor.mConDoorClose = true;
+	// gMem.setFloor(F3);
 	
-	while (gLift.mDoor.mState != DOOR_LAT_SND)
-		;
+	// while (gLift.mDoor.mState != DOOR_LAT_SND)
+		// ;
 	
-	gLift.mDoor.mConDoorOpen = true;
+	// gLift.mDoor.mConDoorOpen = true;
 	
-	while (gLift.mDoor.mState != DOOR_IR)
-		;
+	// while (gLift.mDoor.mState != DOOR_IR)
+		// ;
 	
-	std::this_thread::sleep_for(6s);
+	// std::this_thread::sleep_for(6s);
 	
-	gLift.mDoor.mConDoorClose = true;
+	// gLift.mDoor.mConDoorClose = true;
 	
-	while (gLift.mDoor.mState != DOOR_CLOSED)
-		;
+	// while (gLift.mDoor.mState != DOOR_CLOSED)
+		// ;
 	
-	std::this_thread::sleep_for(1s);
+	// std::this_thread::sleep_for(1s);
 	
-	gMem.setFloor(FG);
+	// gMem.setFloor(FG);
 	
-	while (gLift.mDoor.mState != DOOR_LAT_SND)
-		;
+	// while (gLift.mDoor.mState != DOOR_LAT_SND)
+		// ;
 	
-	gLift.mDoor.mConDoorOpen = true;
-	gLift.mDoor.mConDoorClose = true;
+	// gLift.mDoor.mConDoorOpen = true;
+	// gLift.mDoor.mConDoorClose = true;
 	
-	while (gLift.mDoor.mState != DOOR_CLOSED)
-		;
+	// while (gLift.mDoor.mState != DOOR_CLOSED)
+		// ;
 	
-	FireKey = false;	
-}
-	
+	// FireKey = false;	
+// }
+*/	
 	
 	// exit(0);
 	
@@ -248,8 +248,11 @@ void output() {
 	
 	cout << "Elevator Floor:  " << std::to_string(static_cast<int>(gLift.mFloor)) << endl;
 	cout << "Elevator State:  " << pretty(gLift.mState) << endl;
-	// cout << "Elevator Stop:   " << gLift.mStop << endl;
+	cout << "IR Sensor State: " << pretty(gLift.mDoor.mIRSen.mState) << endl;
 	cout << "Door State:      " << pretty(gLift.mDoor.mState) << endl;
+	cout << "Elevator Stop:   " << gLift.mStop << endl;
+	cout << "Door Open Sig:   " << gLift.mDoor.mConDoorOpen << endl;
+	cout << "Door Close Sig:  " << gLift.mDoor.mConDoorClose << endl;
 	cout << "Fire State:      " << FireKey << endl;
 	cout << "X20 register:    " << std::to_string(gFL.getLights()) << endl;
 	cout << "Sound:           " << Sound << endl;
