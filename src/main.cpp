@@ -3,6 +3,10 @@
 #include <iostream>
 #include <atomic>
 #include <thread>
+#include <vector>
+#include <fstream>
+#include <sstream>
+// #include <string_view>
 
 #include "main.hpp"
 
@@ -31,7 +35,12 @@ FloorLights gFL;
 void output();
 void printer();
 
-int main() {
+struct Token;
+// std::vector<Token> parser(std::string_view file); // not using c++ 17
+std::vector<Token> parser(std::string file); // not using c++ 17
+void runner(std::vector<Token>& dat);
+
+int main(int argc, char* argv[]) {
 	using std::clog;
 	using std::endl;
 	using std::cout;
@@ -40,6 +49,15 @@ int main() {
 	IRon = false;
 	Sound = false;
 	gStop = false;
+	
+	std::thread ptr{ printer };
+	
+	if (argc <= 1) exit (-1);
+	
+	auto pdat = parser(argv[1]);
+	runner(pdat);
+	
+	exit(0);
 	
 	int sim;
 	std::cout << "Which sim would you like to run?" << std::endl;
@@ -54,8 +72,6 @@ int main() {
 //   - The student is already in the elevator and presses the 2ndfloor button. 
 //     When the person gets out of the elevator on the 2ndfloor, 
 //     no one gets in and the elevator moves to the default position.
-	
-	std::thread ptr{ printer };
 	
 	if (sim == 1) {
 		cout << "Running Sim 1" << endl;
@@ -241,4 +257,129 @@ void output() {
 	cout << endl;
 	
 	
+}
+
+enum class TKN {
+	HOUR,
+	MIN,
+	ERST,
+	MEM,
+	START,
+	WAIT,
+	WFLR,
+	WDOOR,
+	IRON,
+	FIRE,
+	DOORO,
+	DOORC,
+};
+
+struct Token {
+	TKN mToken;
+	int mData;
+};
+
+std::vector<Token> parser(std::string file) {
+	std::vector<Token> ret;
+	
+	std::ifstream readFile(file.c_str());
+	std::string line;
+	while(std::getline(readFile,line)) {
+		std::stringstream iss(line);
+		
+		std::string tknstr;
+		std::string dat;
+		std::getline(iss, tknstr, ' ');
+		std::getline(iss, dat);
+		
+		// std::cout << dat << std::endl;
+		
+		Token t;
+		t.mData = stoi(dat);
+		
+		if        (tknstr == "hour") {
+			t.mToken = TKN::HOUR;
+		} else if (tknstr == "min") {
+			t.mToken = TKN::MIN;
+		} else if (tknstr == "erst") {
+			t.mToken = TKN::ERST;
+		} else if (tknstr == "mem") {
+			t.mToken = TKN::MEM;
+		} else if (tknstr == "start") {
+			t.mToken = TKN::START;
+		} else if (tknstr == "wait") {
+			t.mToken = TKN::WAIT;
+		} else if (tknstr == "waitff") {
+			t.mToken = TKN::WFLR;
+		} else if (tknstr == "waitfd") {
+			t.mToken = TKN::WDOOR;
+		} else if (tknstr == "iron") {
+			t.mToken = TKN::IRON;
+		} else if (tknstr == "fire") {
+			t.mToken = TKN::FIRE;
+		} else if (tknstr == "dooro") {
+			t.mToken = TKN::DOORO;
+		} else if (tknstr == "doorc") {
+			t.mToken = TKN::DOORC;
+		}
+		ret.push_back(t);
+	}
+	
+	return ret;
+}
+
+
+void runner(std::vector<Token>& dat) {
+	for (auto& t : dat) {
+		switch (t.mToken) { // this is internally impl by a jump table
+			case TKN::HOUR:
+				gClk.reset(true, t.mData);
+			break;
+			
+			case TKN::MIN:
+				gClk.reset(false, t.mData);
+			break;
+			
+			case TKN::ERST:
+				gLift.reset(static_cast<FloorNum>(t.mData));
+			break;
+			
+			case TKN::MEM:
+				gMem.setFloor(static_cast<FloorNum>(t.mData));
+			break;
+			
+			case TKN::START:
+				gClk.reset();
+				gStart = true;
+			break;
+			
+			case TKN::WAIT:
+				std::this_thread::sleep_for(std::chrono::seconds{ t.mData });
+			break;
+			
+			case TKN::WFLR:
+				while (gLift.mFloor != static_cast<FloorNum>(t.mData));
+			break;
+			
+			case TKN::WDOOR:
+				while (gLift.mDoor.mState != static_cast<DoorState>(t.mData));
+			break;
+			
+			case TKN::IRON:
+				IRon = static_cast<bool>(t.mData);
+			break;
+			
+			case TKN::FIRE:
+				FireKey = static_cast<bool>(t.mData);
+			break;
+			
+			case TKN::DOORO:
+				gLift.mDoor.mConDoorOpen = true;
+			break;
+			
+			case TKN::DOORC:
+				gLift.mDoor.mConDoorClose = true;
+			break;
+		}
+	}
 }

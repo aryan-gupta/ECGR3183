@@ -22,7 +22,8 @@ class Clock {
 public:
 	Clock();
 	
-	void reset(unsigned h, unsigned m);
+	void reset();
+	void reset(bool hour, unsigned val);
 	
 	unsigned getHour();
 	unsigned getMin();

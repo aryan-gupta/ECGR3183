@@ -5,11 +5,13 @@ Clock::Clock() {
 	reset(0, 0);
 }
 
-void Clock::reset(unsigned h, unsigned m) {
-	mHour = h;
-	mMinute = m;
-	
+void Clock::reset() {
 	mStart = clk::now();
+}
+
+void Clock::reset(bool hour, unsigned val) {
+	if (hour) mHour = val;
+	else mMinute = val;
 }
 
 // https://stackoverflow.com/questions/15957805/

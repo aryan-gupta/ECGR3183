@@ -76,8 +76,9 @@ void Controller::start() {
 		// person in the elevator and we will reset to the default
 		// floor
 		if (memEmpty) {
-			auto end = clk::now() + 5s; // FIX THIS IT SHOULD BE 30 SECONDS
+			auto end = clk::now() + 30s; // FIX THIS IT SHOULD BE 30 SECONDS
 			while (clk::now() < end) {
+				// std::cout << "......................................" << std::endl;
 				if (!gMem.isEmpty()) // user pushed a floor button
 					break;
 			}

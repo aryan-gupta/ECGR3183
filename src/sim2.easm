@@ -1,0 +1,16 @@
+hour 14
+min 59
+erst 1
+mem 3
+start 1
+waitff 3
+iron 1
+waitfd 3
+wait 7
+iron 0
+waitfd 4
+mem 1
+wait 2
+mem 2
+wait 1
+mem 0
