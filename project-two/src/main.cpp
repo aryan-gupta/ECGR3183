@@ -443,21 +443,21 @@ Writeback_Instruction execute(Decoded_Instruction decIns) {
 		case OP::FLOOR: {
 			r.mUse = true;
 			r.mWb = decIns.mRi;
-			r.mData = gRFile[decIns.mRj]; /// @todo move this to ALU object
+			r.mData = std::floor(gRFile[decIns.mRj]); /// @todo move this to ALU object
 			return r;
 		}
 		
 		case OP::CEIL: {
 			r.mUse = true;
 			r.mWb = decIns.mRi;
-			r.mData = gRFile[decIns.mRj]; /// @todo move this to ALU object
+			r.mData = std::ceil(gRFile[decIns.mRj]); /// @todo move this to ALU object
 			return r;
 		}
 		
 		case OP::ROUND: {
 			r.mUse = true;
 			r.mWb = decIns.mRi;
-			r.mData = gRFile[decIns.mRj]; /// @todo move this to ALU object
+			r.mData = std::round(gRFile[decIns.mRj]); /// @todo move this to ALU object
 			return r;
 		}
 		
@@ -514,5 +514,56 @@ Writeback_Instruction execute(Decoded_Instruction decIns) {
 			
 			return r;
 		}
+		
+		case OP::COS: {
+			r.mUse = true;
+			r.mWb = decIns.mRi;
+			
+			r.mData = 1; /// @todo move this to ALU object
+			
+			return r;
+		}
+		
+		case OP::TAN: {
+			r.mUse = true;
+			r.mWb = decIns.mRi;
+			
+			r.mData = 1; /// @todo move this to ALU object
+			
+			return r;
+		}
+		
+		case OP::EXP: {
+			r.mUse = true;
+			r.mWb = decIns.mRi;
+			
+			r.mData = 1; /// @todo move this to ALU object
+			
+			return r;
+		}
+		
+		
+		case OP::LOG: {
+			r.mUse = true;
+			r.mWb = decIns.mRi;
+			
+			r.mData = 1; /// @todo move this to ALU object
+			
+			return r;
+		}
+		
+		
+		case OP::SQRT: {
+			r.mUse = true;
+			r.mWb = decIns.mRi;
+			
+			r.mData = 1; /// @todo move this to ALU object
+			
+			return r;
+		}
 	}
 }
+
+bool writeback() {
+		
+}	
