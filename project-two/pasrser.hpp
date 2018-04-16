@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
 	
 	
 }
-
+ 
 std::vector<Token> parser(std::string file) {
 	// The instruction file is orgaized by one 
 	// opcode and a data attached to it (one int)
