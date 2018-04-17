@@ -1,6 +1,14 @@
 
+#include <cstdint>
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <fstream>
+#include <cmath>
+#include <sstream>
+
 using reg_t = uint32_t;
-using RegFile = reg_t[16]
+using RegFile = reg_t[16];
 // struct RegFile {
 	// reg_t R0;
 	// reg_t R1;
@@ -43,37 +51,37 @@ enum class REG {
 REG rtob(std::string reg) {
 	std::transform(reg.begin(), reg.end(), reg.begin(), ::toupper);
 	
-	if (reg = "R0")
+	if (reg == "R0")
 		return REG::R0;
-	if (reg = "R1")
+	if (reg == "R1")
 		return REG::R1;
-	if (reg = "R2")
+	if (reg == "R2")
 		return REG::R2;
-	if (reg = "R3")
+	if (reg == "R3")
 		return REG::R3;
-	if (reg = "R4")
+	if (reg =="R4")
 		return REG::R4;
-	if (reg = "R5")
+	if (reg == "R5")
 		return REG::R5;
-	if (reg = "R6")
+	if (reg == "R6")
 		return REG::R6;
-	if (reg = "R7")
+	if (reg == "R7")
 		return REG::R7;
-	if (reg = "R8")
+	if (reg == "R8")
 		return REG::R8;
-	if (reg = "R9")
+	if (reg == "R9")
 		return REG::R9;
-	if (reg = "R10")
+	if (reg == "R10")
 		return REG::R10;
-	if (reg = "R11")
+	if (reg == "R11")
 		return REG::R11;
-	if (reg = "R12")
+	if (reg == "R12")
 		return REG::R12;
-	if (reg = "R13")
+	if (reg == "R13")
 		return REG::R13;
-	if (reg = "R14")
+	if (reg == "R14")
 		return REG::R14;
-	if (reg = "R15")
+	if (reg == "R15")
 		return REG::R15;
 }
 
@@ -117,7 +125,7 @@ struct Writeback_Instruction {
 	bool mUse = false;
 	REG mWb;
 	reg_t mData;
-}
+};
 
 // Global Vars
 RegFile gRFile;
@@ -127,7 +135,7 @@ std::ifstream gInsMem;
 std::string fetch(); // fetches next instruc
 Decoded_Instruction decode(std::string rawins);
 Writeback_Instruction execute(Decoded_Instruction decins);
-bool writeback(Writeback_Instruction wbins)
+bool writeback(Writeback_Instruction wbins);
 
 int main(int argc, char* argv[]) {
 	if (argc <= 1) exit (-1);
@@ -136,7 +144,7 @@ int main(int argc, char* argv[]) {
 	using std::endl;
 	using std::cout;
 	
-	gInsMem = std::ifstream{ argv[1] };
+	gInsMem.open(argv[1]);
 	
 	while (true) {
 		// fetch
@@ -158,10 +166,39 @@ std::string fetch() {
 	std::string raw; // this holds the raw instruction as a string in the
 	// form OP Ri Rj Rk or any other format (with imediate values)
 	
-	bool cont = std::getline(gInsMem,raw);
+	bool cont = static_cast<bool>(std::getline(gInsMem,raw));
 	if (!cont) return ""; // if we are at the end of the file
 	return raw;
 	
+}
+
+void setup2reg(std::stringstream& iss, Decoded_Instruction& t) {
+	std::string temp;
+	
+	std::getline(iss, temp, ',');
+	t.mRi = rtob(temp);
+	std::getline(iss, temp, ' '); // skip that little space after the comma
+	
+	std::getline(iss, temp);
+	t.mRj = rtob(temp);
+}
+
+void setup3reg(std::stringstream& iss, Decoded_Instruction& t) {
+	std::string temp;
+	
+	std::getline(iss, temp, ',');
+	t.mRi = rtob(temp);
+	std::getline(iss, temp, ' '); // skip that little space after the comma
+	
+	std::getline(iss, temp, ',');
+	t.mRj = rtob(temp);
+	std::getline(iss, temp, ' '); // skip that little space after the comma
+	
+	//std::getline(iss, temp);
+	iss >> temp; // get the last bit
+	
+	/// @todo Check if there are comments
+	t.mRk = rtob(temp);
 }
 
 Decoded_Instruction decode(std::string rawins) {
@@ -184,9 +221,11 @@ Decoded_Instruction decode(std::string rawins) {
 		
 		std::getline(iss, temp, ',');
 		t.mRi = rtob(temp);
+		std::getline(iss, temp, ' '); // skip that little space after the comma
 		
 		std::getline(iss, temp, ' ');
 		t.mIm = stoi(temp);
+		
 	} else if (opcode == "GET") {
 		t.mOp = OP::GET;
 		
@@ -195,24 +234,10 @@ Decoded_Instruction decode(std::string rawins) {
 		
 	} else if (opcode == "MOVE") {
 		t.mOp = OP::MOVE;
-		
-		std::getline(iss, temp, ',');
-		t.mRi = rtob(temp);
-		
-		std::getline(iss, temp, ' ');
-		t.mRj = rtob(temp);
-		
+		setup2reg(iss, t);
 	} else if (opcode == "FADD") {
 		t.mOp = OP::FADD;
-		
-		std::getline(iss, temp, ',');
-		t.mRi = rtob(temp);
-		
-		std::getline(iss, temp, ',');
-		t.mRj = rtob(temp);
-		
-		std::getline(iss, temp, ' ');
-		t.mRk = rtob(temp);
+		setup3reg(iss, t);
 	} else if (opcode == "FSUB") {
 		t.mOp = OP::FSUB;
 		
@@ -394,70 +419,70 @@ Writeback_Instruction execute(Decoded_Instruction decIns) {
 		}
 		
 		case OP::GET: {
-			std::cout << static_cast<int> (gRFile[decIns.mRi]) << std::endl;
+			std::cout << static_cast<int>(gRFile[static_cast<size_t>(decIns.mRi)]) << std::endl;
 			return r;
 		}
 
 		case OP::MOVE: {
 			r.mUse = true;
 			r.mWb = decIns.mRi;
-			r.mData = gRFile[decIns.mRj];
+			r.mData = gRFile[static_cast<size_t>(decIns.mRj)];
 			return r;
 		}
 		
 		case OP::FADD: {
 			r.mUse = true;
 			r.mWb = decIns.mRi;
-			r.mData = gRFile[decIns.mRj] + gRFile[decIns.mRk]; /// @todo move this to ALU object
+			r.mData =  gRFile[static_cast<size_t>(decIns.mRj)] + gRFile[static_cast<size_t>(decIns.mRk)]; /// @todo move this to ALU object
 			return r;
 		}
 		
 		case OP::FSUB: {
 			r.mUse = true;
 			r.mWb = decIns.mRi;
-			r.mData = gRFile[decIns.mRj] - gRFile[decIns.mRk]; /// @todo move this to ALU object
+			r.mData = gRFile[static_cast<size_t>(decIns.mRj)] - gRFile[static_cast<size_t>(decIns.mRk)]; /// @todo move this to ALU object
 			return r;
 		}
 		
 		case OP::FNEG: {
 			r.mUse = true;
 			r.mWb = decIns.mRi;
-			r.mData = -gRFile[decIns.mRj]; /// @todo move this to ALU object
+			r.mData = -gRFile[static_cast<size_t>(decIns.mRj)]; /// @todo move this to ALU object
 			return r;
 		}
 		
 		case OP::FMUL: {
 			r.mUse = true;
 			r.mWb = decIns.mRi;
-			r.mData = gRFile[decIns.mRj] * gRFile[decIns.mRk]; /// @todo move this to ALU object
+			r.mData = gRFile[static_cast<size_t>(decIns.mRj)] * gRFile[static_cast<size_t>(decIns.mRk)]; /// @todo move this to ALU object
 			return r;
 		}
 		
 		case OP::FDIV: {
 			r.mUse = true;
 			r.mWb = decIns.mRi;
-			r.mData = gRFile[decIns.mRj] / gRFile[decIns.mRk]; /// @todo move this to ALU object
+			r.mData = gRFile[static_cast<size_t>(decIns.mRj)] / gRFile[static_cast<size_t>(decIns.mRk)]; /// @todo move this to ALU object
 			return r;
 		}
 		
 		case OP::FLOOR: {
 			r.mUse = true;
 			r.mWb = decIns.mRi;
-			r.mData = std::floor(gRFile[decIns.mRj]); /// @todo move this to ALU object
+			r.mData = std::floor(gRFile[static_cast<size_t>(decIns.mRj)]); /// @todo move this to ALU object
 			return r;
 		}
 		
 		case OP::CEIL: {
 			r.mUse = true;
 			r.mWb = decIns.mRi;
-			r.mData = std::ceil(gRFile[decIns.mRj]); /// @todo move this to ALU object
+			r.mData = std::ceil(gRFile[static_cast<size_t>(decIns.mRj)]); /// @todo move this to ALU object
 			return r;
 		}
 		
 		case OP::ROUND: {
 			r.mUse = true;
 			r.mWb = decIns.mRi;
-			r.mData = std::round(gRFile[decIns.mRj]); /// @todo move this to ALU object
+			r.mData = std::round(gRFile[static_cast<size_t>(decIns.mRj)]); /// @todo move this to ALU object
 			return r;
 		}
 		
@@ -465,7 +490,7 @@ Writeback_Instruction execute(Decoded_Instruction decIns) {
 			r.mUse = true;
 			r.mWb = decIns.mRi;
 			
-			r.mData = gRFile[decIns.mRj]; /// @todo move this to ALU object
+			r.mData = gRFile[static_cast<size_t>(decIns.mRj)]; /// @todo move this to ALU object
 			if (r.mData < 0)
 				r.mData = -r.mData;
 			
@@ -475,21 +500,21 @@ Writeback_Instruction execute(Decoded_Instruction decIns) {
 		case OP::FINV: {
 			r.mUse = true;
 			r.mWb = decIns.mRi;
-			r.mData = gRFile[decIns.mRj]; /// @todo move this to ALU object
+			r.mData = gRFile[static_cast<size_t>(decIns.mRj)]; /// @todo move this to ALU object
 			return r;
 		}
 		
 		case OP::MIN: {
 			r.mUse = true;
 			r.mWb = decIns.mRi;
-			r.mData = gRFile[decIns.mRj] < gRFile[decIns.mRk] ? gRFile[decIns.mRj] : gRFile[decIns.mRk]; /// @todo move this to ALU object
+			r.mData = gRFile[static_cast<size_t>(decIns.mRj)] < gRFile[static_cast<size_t>(decIns.mRk)] ? gRFile[static_cast<size_t>(decIns.mRj)] : gRFile[static_cast<size_t>(decIns.mRk)]; /// @todo move this to ALU object
 			return r;
 		}
 		
 		case OP::MAX: {
 			r.mUse = true;
 			r.mWb = decIns.mRi;
-			r.mData = gRFile[decIns.mRj] > gRFile[decIns.mRk] ? gRFile[decIns.mRj] : gRFile[decIns.mRk]; /// @todo move this to ALU object
+			r.mData = gRFile[static_cast<size_t>(decIns.mRj)] > gRFile[static_cast<size_t>(decIns.mRk)] ? gRFile[static_cast<size_t>(decIns.mRj)] : gRFile[static_cast<size_t>(decIns.mRk)]; /// @todo move this to ALU object
 			return r;
 		}
 		
@@ -500,7 +525,7 @@ Writeback_Instruction execute(Decoded_Instruction decIns) {
 			r.mData = 1; /// @todo move this to ALU object
 			
 			while (decIns.mIm >= 0) {
-				r.mData *= decIns.mRj;
+				r.mData *= static_cast<reg_t>(decIns.mRj);
 			}
 			
 			return r;
@@ -564,6 +589,9 @@ Writeback_Instruction execute(Decoded_Instruction decIns) {
 	}
 }
 
-bool writeback() {
-		
+bool writeback(Writeback_Instruction wbIns) {
+	if (!wbIns.mUse) return false;
+	
+	gRFile[static_cast<size_t>(wbIns.mWb)] = wbIns.mData;
+	return true;
 }	

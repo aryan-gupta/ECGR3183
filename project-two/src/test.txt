@@ -1,0 +1,4 @@
+SET R1, 5 
+SET R2, 6 
+FADD R3, R1, R2 
+GET R3
