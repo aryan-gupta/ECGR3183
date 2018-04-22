@@ -1,0 +1,2 @@
+SET R1, 5 -- Test comment
+

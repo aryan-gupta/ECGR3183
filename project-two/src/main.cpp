@@ -163,11 +163,28 @@ int main(int argc, char* argv[]) {
 }
 
 std::string fetch() {
-	std::string raw; // this holds the raw instruction as a string in the
+	std::string raw = ""; // this holds the raw instruction as a string in the
 	// form OP Ri Rj Rk or any other format (with imediate values)
 	
-	bool cont = static_cast<bool>(std::getline(gInsMem,raw));
-	if (!cont) return ""; // if we are at the end of the file
+	while (std::getline(gInsMem,raw)) {
+		// std::cout << raw << std::endl;
+
+		if (raw.empty() or raw == "\r") { // skip all empty lines
+			continue;
+		}
+		
+		bool found = false;
+		for (auto c : raw) {
+			if (c == ' ' or c == '\t')
+				continue;
+			if (c == '-')
+				found = true;
+			break;
+		}
+		
+		if (!found)	break;
+	}
+
 	return raw;
 	
 }
@@ -179,8 +196,11 @@ void setup2reg(std::stringstream& iss, Decoded_Instruction& t) {
 	t.mRi = rtob(temp);
 	std::getline(iss, temp, ' '); // skip that little space after the comma
 	
-	std::getline(iss, temp);
-	t.mRj = rtob(temp);
+	iss >> temp;
+	if (size_t pos = temp.find("--"); pos == std::string::npos)
+		t.mRj = rtob(temp);
+	else 
+		t.mRj = rtob(temp.substr(0, temp.find_first_of("- \t")));
 }
 
 void setup3reg(std::stringstream& iss, Decoded_Instruction& t) {
@@ -196,9 +216,13 @@ void setup3reg(std::stringstream& iss, Decoded_Instruction& t) {
 	
 	//std::getline(iss, temp);
 	iss >> temp; // get the last bit
-	
+	// std::cout << temp << std::endl;
 	/// @todo Check if there are comments
-	t.mRk = rtob(temp);
+	
+	if (size_t pos = temp.find("--"); pos == std::string::npos)
+		t.mRk = rtob(temp);
+	else 
+		t.mRk = rtob(temp.substr(0, temp.find_first_of("- \t")));
 }
 
 Decoded_Instruction decode(std::string rawins) {
@@ -214,14 +238,12 @@ Decoded_Instruction decode(std::string rawins) {
 	// do the rest of the line will be decoded depending on what the opcode is
 	// so we want to do this if/else if statements
 	
-	
-	/// @TODO simplefy these to 3 setup 3 registers, setup 2 registers and others?
 	if        (opcode == "SET") {
 		t.mOp = OP::SET;
 		
 		std::getline(iss, temp, ',');
 		t.mRi = rtob(temp);
-		std::getline(iss, temp, ' '); // skip that little space after the comma
+		std::getline(iss, temp, '#'); // skip that little space after the comma
 		
 		std::getline(iss, temp, ' ');
 		t.mIm = stoi(temp);
@@ -231,7 +253,6 @@ Decoded_Instruction decode(std::string rawins) {
 		
 		std::getline(iss, temp, ' ');
 		t.mRi = rtob(temp);
-		
 	} else if (opcode == "MOVE") {
 		t.mOp = OP::MOVE;
 		setup2reg(iss, t);
@@ -240,107 +261,38 @@ Decoded_Instruction decode(std::string rawins) {
 		setup3reg(iss, t);
 	} else if (opcode == "FSUB") {
 		t.mOp = OP::FSUB;
-		
-		std::getline(iss, temp, ',');
-		t.mRi = rtob(temp);
-		
-		std::getline(iss, temp, ',');
-		t.mRj = rtob(temp);
-		
-		std::getline(iss, temp, ' ');
-		t.mRk = rtob(temp);
+		setup3reg(iss, t);
 	} else if (opcode == "FNEG") {
 		t.mOp = OP::FNEG;
-		
-		std::getline(iss, temp, ',');
-		t.mRi = rtob(temp);
-		
-		std::getline(iss, temp, ' ');
+		setup2reg(iss, t);
 		t.mRj = rtob(temp);		
 	} else if (opcode == "FMUL") {
 		t.mOp = OP::FMUL;
-		
-		std::getline(iss, temp, ',');
-		t.mRi = rtob(temp);
-		
-		std::getline(iss, temp, ',');
-		t.mRj = rtob(temp);
-		
-		std::getline(iss, temp, ' ');
-		t.mRk = rtob(temp);
+		setup3reg(iss, t);
 	} else if (opcode == "FDIV") {
 		t.mOp = OP::FDIV;
-		
-		std::getline(iss, temp, ',');
-		t.mRi = rtob(temp);
-		
-		std::getline(iss, temp, ',');
-		t.mRj = rtob(temp);
-		
-		std::getline(iss, temp, ' ');
-		t.mRk = rtob(temp);
+		setup3reg(iss, t);
 	} else if (opcode == "FLOOR") {
 		t.mOp = OP::FLOOR;
-		
-		std::getline(iss, temp, ',');
-		t.mRi = rtob(temp);
-		
-		std::getline(iss, temp, ' ');
-		t.mRj = rtob(temp);	
+		setup2reg(iss, t);
 	} else if (opcode == "CEIL") {
 		t.mOp = OP::CEIL;
-		
-		std::getline(iss, temp, ',');
-		t.mRi = rtob(temp);
-		
-		std::getline(iss, temp, ' ');
-		t.mRj = rtob(temp);	
+		setup2reg(iss, t);
 	} else if (opcode == "ROUND") {
 		t.mOp = OP::ROUND;
-		
-		std::getline(iss, temp, ',');
-		t.mRi = rtob(temp);
-		
-		std::getline(iss, temp, ' ');
-		t.mRj = rtob(temp);	
+		setup2reg(iss, t);
 	} else if (opcode == "FABS") {
 		t.mOp = OP::FABS;
-		
-		std::getline(iss, temp, ',');
-		t.mRi = rtob(temp);
-		
-		std::getline(iss, temp, ' ');
-		t.mRj = rtob(temp);	
+		setup2reg(iss, t);
 	} else if (opcode == "FINV") {
 		t.mOp = OP::FINV;
-		
-		std::getline(iss, temp, ',');
-		t.mRi = rtob(temp);
-		
-		std::getline(iss, temp, ' ');
-		t.mRj = rtob(temp);	
+		setup2reg(iss, t);
 	} else if (opcode == "MIN") {
 		t.mOp = OP::MIN;
-		
-		std::getline(iss, temp, ',');
-		t.mRi = rtob(temp);
-		
-		std::getline(iss, temp, ',');
-		t.mRj = rtob(temp);
-		
-		std::getline(iss, temp, ' ');
-		t.mRk = rtob(temp);
+		setup3reg(iss, t);
 	} else if (opcode == "MAX") {
 		t.mOp = OP::MAX;
-		
-		std::getline(iss, temp, ',');
-		t.mRi = rtob(temp);
-		
-		std::getline(iss, temp, ',');
-		t.mRj = rtob(temp);
-		
-		std::getline(iss, temp, ' ');
-		t.mRk = rtob(temp);
+		setup3reg(iss, t);
 	} else if (opcode == "POW") {
 		t.mOp = OP::POW;
 		
@@ -354,52 +306,22 @@ Decoded_Instruction decode(std::string rawins) {
 		t.mIm = stoi(temp);		
 	} else if (opcode == "SIN") {
 		t.mOp = OP::SIN;
-		
-		std::getline(iss, temp, ',');
-		t.mRi = rtob(temp);
-		
-		std::getline(iss, temp, ' ');
-		t.mRj = rtob(temp);	
+		setup2reg(iss, t);
 	} else if (opcode == "COS") {
 		t.mOp = OP::COS;
-		
-		std::getline(iss, temp, ',');
-		t.mRi = rtob(temp);
-		
-		std::getline(iss, temp, ' ');
-		t.mRj = rtob(temp);	
+		setup2reg(iss, t);
 	} else if (opcode == "TAN") {
 		t.mOp = OP::TAN;
-		
-		std::getline(iss, temp, ',');
-		t.mRi = rtob(temp);
-		
-		std::getline(iss, temp, ' ');
-		t.mRj = rtob(temp);	
+		setup2reg(iss, t);
 	} else if (opcode == "EXP") {
 		t.mOp = OP::EXP;
-		
-		std::getline(iss, temp, ',');
-		t.mRi = rtob(temp);
-		
-		std::getline(iss, temp, ' ');
-		t.mRj = rtob(temp);	
+		setup2reg(iss, t);
 	} else if (opcode == "LOG") {
 		t.mOp = OP::LOG;
-		
-		std::getline(iss, temp, ',');
-		t.mRi = rtob(temp);
-		
-		std::getline(iss, temp, ' ');
-		t.mRj = rtob(temp);	
+		setup2reg(iss, t);
 	} else if (opcode == "SQRT") {
 		t.mOp = OP::SQRT;
-		
-		std::getline(iss, temp, ',');
-		t.mRi = rtob(temp);
-		
-		std::getline(iss, temp, ' ');
-		t.mRj = rtob(temp);	
+		setup2reg(iss, t);
 	} else {
 		throw 4; // have an actual exception later
 	}
@@ -535,7 +457,7 @@ Writeback_Instruction execute(Decoded_Instruction decIns) {
 			r.mUse = true;
 			r.mWb = decIns.mRi;
 			
-			r.mData = 1; /// @todo move this to ALU object
+			r.mData = std::sin(gRFile[static_cast<size_t>(decIns.mRj)]); /// @todo move this to ALU object
 			
 			return r;
 		}
@@ -544,7 +466,7 @@ Writeback_Instruction execute(Decoded_Instruction decIns) {
 			r.mUse = true;
 			r.mWb = decIns.mRi;
 			
-			r.mData = 1; /// @todo move this to ALU object
+			r.mData = std::cos(gRFile[static_cast<size_t>(decIns.mRj)]); /// @todo move this to ALU object
 			
 			return r;
 		}
@@ -553,7 +475,7 @@ Writeback_Instruction execute(Decoded_Instruction decIns) {
 			r.mUse = true;
 			r.mWb = decIns.mRi;
 			
-			r.mData = 1; /// @todo move this to ALU object
+			r.mData = std::tan(gRFile[static_cast<size_t>(decIns.mRj)]); /// @todo move this to ALU object
 			
 			return r;
 		}
@@ -582,7 +504,7 @@ Writeback_Instruction execute(Decoded_Instruction decIns) {
 			r.mUse = true;
 			r.mWb = decIns.mRi;
 			
-			r.mData = 1; /// @todo move this to ALU object
+			r.mData = std::sqrt(gRFile[static_cast<size_t>(decIns.mRj)]); /// @todo move this to ALU object
 			
 			return r;
 		}
