@@ -7,7 +7,7 @@
 #include <cmath>
 #include <sstream>
 
-using reg_t = uint32_t;
+using reg_t = float;
 using RegFile = reg_t[16];
 // struct RegFile {
 	// reg_t R0;
@@ -44,8 +44,7 @@ enum class REG {
 	R12,
 	R13,
 	R14,
-	R15,
-	R16
+	R15
 };
 
 REG rtob(std::string reg) {
@@ -117,7 +116,8 @@ struct Decoded_Instruction {
 	REG mRj;
 	union {
 		REG mRk;
-		uint16_t mIm; // 16 bits (I know but this processor cant handle that swaggry of 19 bits)
+		// FIX THIS HERE
+		float mIm; // 16 bits (I know but this processor cant handle that swaggry of 19 bits)
 	};
 };
 
@@ -245,13 +245,15 @@ Decoded_Instruction decode(std::string rawins) {
 		t.mRi = rtob(temp);
 		std::getline(iss, temp, '#'); // skip that little space after the comma
 		
-		std::getline(iss, temp, ' ');
-		t.mIm = stoi(temp);
-		
+		iss >> temp;
+		if (size_t pos = temp.find("--"); pos == std::string::npos)
+			t.mIm = stof(temp);
+		else 
+			t.mIm = stof(temp.substr(0, temp.find_first_of("- \t")));		
 	} else if (opcode == "GET") {
 		t.mOp = OP::GET;
 		
-		std::getline(iss, temp, ' ');
+		iss >> temp;
 		t.mRi = rtob(temp);
 	} else if (opcode == "MOVE") {
 		t.mOp = OP::MOVE;
@@ -264,8 +266,7 @@ Decoded_Instruction decode(std::string rawins) {
 		setup3reg(iss, t);
 	} else if (opcode == "FNEG") {
 		t.mOp = OP::FNEG;
-		setup2reg(iss, t);
-		t.mRj = rtob(temp);		
+		setup2reg(iss, t);	
 	} else if (opcode == "FMUL") {
 		t.mOp = OP::FMUL;
 		setup3reg(iss, t);
@@ -298,12 +299,17 @@ Decoded_Instruction decode(std::string rawins) {
 		
 		std::getline(iss, temp, ',');
 		t.mRi = rtob(temp);
+		std::getline(iss, temp, ' ');
 		
 		std::getline(iss, temp, ',');
 		t.mRj = rtob(temp);
+		std::getline(iss, temp, '#');
 		
-		std::getline(iss, temp, ' ');
-		t.mIm = stoi(temp);		
+		iss >> temp;
+		if (size_t pos = temp.find("--"); pos == std::string::npos)
+			t.mIm = stoi(temp);
+		else 
+			t.mIm = stoi(temp.substr(0, temp.find_first_of("- \t")));	
 	} else if (opcode == "SIN") {
 		t.mOp = OP::SIN;
 		setup2reg(iss, t);
@@ -341,7 +347,8 @@ Writeback_Instruction execute(Decoded_Instruction decIns) {
 		}
 		
 		case OP::GET: {
-			std::cout << static_cast<int>(gRFile[static_cast<size_t>(decIns.mRi)]) << std::endl;
+			r.mUse = false;
+			std::cout << gRFile[static_cast<size_t>(decIns.mRi)] << std::endl;
 			return r;
 		}
 
@@ -384,6 +391,7 @@ Writeback_Instruction execute(Decoded_Instruction decIns) {
 			r.mUse = true;
 			r.mWb = decIns.mRi;
 			r.mData = gRFile[static_cast<size_t>(decIns.mRj)] / gRFile[static_cast<size_t>(decIns.mRk)]; /// @todo move this to ALU object
+			// std::cout << r.mData << "  " << gRFile[static_cast<size_t>(decIns.mRj)] << "  " << gRFile[static_cast<size_t>(decIns.mRk)] << std::endl;
 			return r;
 		}
 		
@@ -446,9 +454,8 @@ Writeback_Instruction execute(Decoded_Instruction decIns) {
 			
 			r.mData = 1; /// @todo move this to ALU object
 			
-			while (decIns.mIm >= 0) {
-				r.mData *= static_cast<reg_t>(decIns.mRj);
-			}
+			while (decIns.mIm --> 0)
+				r.mData *= gRFile[static_cast<size_t>(decIns.mRj)];
 			
 			return r;
 		}
