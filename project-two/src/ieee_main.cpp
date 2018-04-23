@@ -17,7 +17,7 @@ int main() {
 	// cout << cast<float>(num1) << endl;
 	// cout << cast<float>(num2) << endl;
 	
-	auto add = num1 + num2;
+	auto add = num1 * num2;
 	
 	cout << reinterpret_cast<float&>(add) << endl;
 	

@@ -10,4 +10,7 @@ struct ieee754 {
 };
 
 // Im defining this outside the class cause of realism
+ieee754 operator- (ieee754 a);
 ieee754 operator+ (ieee754 a, ieee754 b);
+ieee754 operator- (ieee754 a, ieee754 b);
+ieee754 operator* (ieee754 a, ieee754 b);
