@@ -217,7 +217,7 @@ constexpr std::array<fac_t, FAC_LIMIT> fac() {
 	
 	for (int i = 1; i < FAC_LIMIT; ++i) {
 		fac_t fac = i;
-		for (int j = fac - 1; j > 0; --j) {
+		for (int j = fac - 1; j > 1; --j) {
 			fac *= j;
 		}
 		ret[i] = fac;
@@ -226,13 +226,25 @@ constexpr std::array<fac_t, FAC_LIMIT> fac() {
 	return ret;
 }
 
-static constexpr std::array<fac_t, FAC_LIMIT> factorials = fac();
-
-int some_random_func () {
-	int ans2 = ans2 - (1.0 / 1.0);
-}
-
-ieee754 sin2 (ieee754 a) {
+static constexpr std::array<fac_t, FAC_LIMIT> factorials = fac();
+ieee754 sin (ieee754 a) {
+	ieee754 DPI;
+	DPI = 6.283185307;
+	
+	float af = reinterpret_cast<float&>(a);
+	while (af > 6.283185307) {
+		a = a - DPI;
+		af = reinterpret_cast<float&>(a);
+	}
+	
+	af = reinterpret_cast<float&>(a);
+	while (af < -6.283185307) {
+		a = a + DPI;
+		af = reinterpret_cast<float&>(a);
+	}
+	
+	// std::cout << reinterpret_cast<float&>(a) << std::endl;
+	
 	ieee754 ans = a;
 	for (int i = 1; i < FAC_LIMIT;) {
 		float fact;
@@ -240,13 +252,13 @@ ieee754 sin2 (ieee754 a) {
 		i += 2;
 		fact = factorials[i];
 		ans = ans - (pow(a, i) / reinterpret_cast<ieee754&>(fact));
-		auto temp = pow(a, i);
+		// auto temp = pow(a, i);
 		// std::cout << reinterpret_cast<float&>(temp) << "  " << float( factorials[i] ) << "  " << reinterpret_cast<float&>(ans) << std::endl;
 		
 		i += 2;
 		fact = factorials[i];
 		ans = ans + (pow(a, i) / reinterpret_cast<ieee754&>(fact));
-		temp = pow(a, i);
+		// temp = pow(a, i);
 		// std::cout << reinterpret_cast<float&>(temp) << "  " << float( factorials[i] ) << "  " << reinterpret_cast<float&>(ans) << std::endl;
 		
 	}
@@ -276,5 +288,36 @@ ieee754 cos (ieee754 a) {
 }
 
 ieee754 tan (ieee754 a) {
-	return cos(a) / sin2(a);
+	return cos(a) / sin(a);
+}
+
+ieee754 exp (ieee754 a) {
+	ieee754 ans;
+	ans = 1.0f;
+	for (int i = 1; i < FAC_LIMIT; ++i) {
+		float fact;
+		fact = factorials[i];
+		ans = ans + (pow(a, i) / reinterpret_cast<ieee754&>(fact));
+	}
+	return ans;
+}
+
+ieee754 log (ieee754 a) {
+	ieee754 ans;
+	ieee754 one;
+	// THis is so anoying but Im kinda being lazy and not creating a c'to for this
+	one = 1.0f;
+	a = a - one;
+	ans = a;
+	for (int i = 0; i < 10; ) {
+		++i;
+		ieee754 ic; // this is actually getting very irritating, too late to change it now
+		ic = (float)i;
+		ans = ans - (pow(a, i) / ic);
+		
+		++i;
+		ic = (float)i;
+		ans = ans + (pow(a, i) / ic);
+	}
+	return ans;
 }
