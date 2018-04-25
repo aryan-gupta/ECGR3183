@@ -9,6 +9,10 @@
 typedef __int128 int128_t;
 typedef unsigned __int128 uint128_t;
 
+// I know, I know, Im using the reinterpret_cast wrong and I probs have so much code
+// that isnt defined strictly by the standard, but guess what? It works irl and works logically
+// and for now thats all I care about. 
+
 ieee754 ieee754::operator= (float b) {
 	*this = reinterpret_cast<ieee754&>(b);
 	return *this;
@@ -288,7 +292,7 @@ ieee754 cos (ieee754 a) {
 }
 
 ieee754 tan (ieee754 a) {
-	return cos(a) / sin(a);
+	return sin(a) / cos(a);
 }
 
 ieee754 exp (ieee754 a) {
@@ -304,20 +308,14 @@ ieee754 exp (ieee754 a) {
 
 ieee754 log (ieee754 a) {
 	ieee754 ans;
-	ieee754 one;
-	// THis is so anoying but Im kinda being lazy and not creating a c'to for this
-	one = 1.0f;
-	a = a - one;
-	ans = a;
-	for (int i = 0; i < 10; ) {
-		++i;
-		ieee754 ic; // this is actually getting very irritating, too late to change it now
-		ic = (float)i;
-		ans = ans - (pow(a, i) / ic);
-		
-		++i;
-		ic = (float)i;
-		ans = ans + (pow(a, i) / ic);
-	}
+	float ansf = std::log(reinterpret_cast<float&>(a));
+	ans = reinterpret_cast<ieee754&>(ansf);
+	return ans;
+}
+
+ieee754 sqrt (ieee754 a) {
+	ieee754 ans;
+	float ansf = std::sqrt(reinterpret_cast<float&>(a));
+	ans = reinterpret_cast<ieee754&>(ansf);
 	return ans;
 }

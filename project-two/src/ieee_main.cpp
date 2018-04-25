@@ -21,7 +21,7 @@ int main() {
 	// auto addf = sin(5.0f);
 	
 	//auto add = pow(num1, 7);
-	auto add = log(num1);
+	auto add = sqrt(num1);
 	//auto add = inverse(num1);
 	//auto add = num1 * num2;
 	
