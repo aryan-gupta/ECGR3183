@@ -214,7 +214,7 @@ ieee754 pow (ieee754 a, short b) {
 }
 
 static constexpr short FAC_LIMIT = 20;
-using fac_t = uint64_t;
+using fac_t = float;
 
 constexpr std::array<fac_t, FAC_LIMIT> fac() {
 	std::array<fac_t, FAC_LIMIT> ret{};
@@ -232,39 +232,31 @@ constexpr std::array<fac_t, FAC_LIMIT> fac() {
 
 static constexpr std::array<fac_t, FAC_LIMIT> factorials = fac();
 ieee754 sin (ieee754 a) {
-	ieee754 DPI;
-	DPI = 6.283185307;
+	// ieee754 DPI;
+	// DPI = 6.283185307;
 	
-	float af = reinterpret_cast<float&>(a);
-	while (af > 6.283185307) {
-		a = a - DPI;
-		af = reinterpret_cast<float&>(a);
-	}
+	// float af = reinterpret_cast<float&>(a);
+	// while (af > 6.283185307) {
+		// a = a - DPI;
+		// af = reinterpret_cast<float&>(a);
+	// }
 	
-	af = reinterpret_cast<float&>(a);
-	while (af < -6.283185307) {
-		a = a + DPI;
-		af = reinterpret_cast<float&>(a);
-	}
+	// af = reinterpret_cast<float&>(a);
+	// while (af < -6.283185307) {
+		// a = a + DPI;
+		// af = reinterpret_cast<float&>(a);
+	// }
 	
 	// std::cout << reinterpret_cast<float&>(a) << std::endl;
 	
 	ieee754 ans = a;
-	for (int i = 1; i < FAC_LIMIT;) {
-		float fact;
+	for (int i = 1; i < 8;) {
+		i += 2;
+		ans = ans - (pow(a, i) / reinterpret_cast<const ieee754&>(factorials[i]));
+		// std::cout << reinterpret_cast<float&>(ans) << i << "  " << (uint64_t)factorials[i] << std::endl;
 		
 		i += 2;
-		fact = factorials[i];
-		ans = ans - (pow(a, i) / reinterpret_cast<ieee754&>(fact));
-		// auto temp = pow(a, i);
-		// std::cout << reinterpret_cast<float&>(temp) << "  " << float( factorials[i] ) << "  " << reinterpret_cast<float&>(ans) << std::endl;
-		
-		i += 2;
-		fact = factorials[i];
-		ans = ans + (pow(a, i) / reinterpret_cast<ieee754&>(fact));
-		// temp = pow(a, i);
-		// std::cout << reinterpret_cast<float&>(temp) << "  " << float( factorials[i] ) << "  " << reinterpret_cast<float&>(ans) << std::endl;
-		
+		ans = ans + (pow(a, i) / reinterpret_cast<const ieee754&>(factorials[i]));
 	}
 	return ans;
 }
@@ -273,19 +265,11 @@ ieee754 cos (ieee754 a) {
 	ieee754 ans;
 	ans = 1.0f;
 	for (int i = 0; i < FAC_LIMIT;) {
-		float fact;
+		i += 2;
+		ans = ans - (pow(a, i) / reinterpret_cast<const ieee754&>(factorials[i]));
 		
 		i += 2;
-		fact = factorials[i];
-		ans = ans - (pow(a, i) / reinterpret_cast<ieee754&>(fact));
-		auto temp = pow(a, i);
-		// std::cout << reinterpret_cast<float&>(temp) << "  " << float( factorials[i] ) << "  " << reinterpret_cast<float&>(ans) << std::endl;
-		
-		i += 2;
-		fact = factorials[i];
-		ans = ans + (pow(a, i) / reinterpret_cast<ieee754&>(fact));
-		temp = pow(a, i);
-		// std::cout << reinterpret_cast<float&>(temp) << "  " << float( factorials[i] ) << "  " << reinterpret_cast<float&>(ans) << std::endl;
+		ans = ans + (pow(a, i) / reinterpret_cast<const ieee754&>(factorials[i]));
 		
 	}
 	return ans;
@@ -299,9 +283,7 @@ ieee754 exp (ieee754 a) {
 	ieee754 ans;
 	ans = 1.0f;
 	for (int i = 1; i < FAC_LIMIT; ++i) {
-		float fact;
-		fact = factorials[i];
-		ans = ans + (pow(a, i) / reinterpret_cast<ieee754&>(fact));
+		ans = ans + (pow(a, i) / reinterpret_cast<const ieee754&>(factorials[i]));
 	}
 	return ans;
 }
@@ -318,4 +300,39 @@ ieee754 sqrt (ieee754 a) {
 	float ansf = std::sqrt(reinterpret_cast<float&>(a));
 	ans = reinterpret_cast<ieee754&>(ansf);
 	return ans;
+}
+
+ieee754 round (ieee754 a) {
+	bool g_bit = a.man bitand 0x4;
+	bool r_bit = a.man bitand 0x2;
+	bool s_bit = a.man bitand 0x1;
+	
+	// https://stackoverflow.com/questions/8981913/how-to-perform-round-to-even-with-floating-point-numbers
+	if (g_bit) {
+		// turn on the high bit
+		if (a.man bitand 0x8) {
+			a.man = a.man bitor 0x10;
+			a.man = a.man bitand 0xFFFF'FFFF'FFE0;
+		}
+		
+		a.man = a.man bitor 0x8;
+		a.man = a.man bitand 0xFFFF'FFFF'FFF0;
+		
+		return a;
+	}
+	
+	a.man = a.man bitand 0xFFFF'FFFF'FFF0;
+	return a;
+}
+
+ieee754 ceil (ieee754 a) {
+	a.man = a.man bitor 0x8;
+	a.man = a.man bitand 0xFFFF'FFFF'FFF8;
+	
+	return a;
+}
+
+ieee754 floor (ieee754 a) {
+	a.man = a.man bitand 0xFFFF'FFFF'FFF8;
+	return a;
 }
